@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "Runtime/Engine/Classes/Camera/CameraComponent.h"
+#include "Runtime/Engine/Classes/GameFramework/DefaultPawn.h"
 #include "BasicPawnInterface.h"
 #include "BasicPawn.generated.h"
 
@@ -14,13 +15,11 @@
 *
 */
 UCLASS(Blueprintable)
-class BASICFRAMEWORK_API ABasicPawn : public APawn, public IBasicPawnInterface
+class BASICFRAMEWORK_API ABasicPawn : public ADefaultPawn, public IBasicPawnInterface
 {
 	GENERATED_BODY()
 
 protected:
-	UPROPERTY(EditAnywhere)
-	USceneComponent* defaultVisibleComponent = nullptr;
 
 	UCameraComponent* cameraComponent = nullptr;
 

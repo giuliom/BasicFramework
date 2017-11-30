@@ -71,7 +71,7 @@ void ABasicPlayerController::PossessBasicPawn(APawn* pCharacter)
 
 	if (interf == nullptr) return;
 	
-	if (characterPawnInterface != nullptr) IBasicPawnInterface::Execute_OnDispossess(interf->_getUObject());
+	if (characterPawnInterface != nullptr) IBasicPawnInterface::Execute_OnUnpossess(interf->_getUObject());
 	Possess(pCharacter);
 
 	characterPawnInterface = interf;

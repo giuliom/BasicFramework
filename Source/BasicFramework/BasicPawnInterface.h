@@ -35,9 +35,9 @@ public:
 	virtual void OnPossess_Internal(int32 index) { playerIndex = index; };
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = Input)
-	void OnDispossess();
-	void OnDispossess_Implementation() { OnDispossess_Internal(); }
-	virtual void OnDispossess_Internal() {}
+	void OnUnpossess();
+	void OnUnpossess_Implementation() { OnUnpossess_Internal(); }
+	virtual void OnUnpossess_Internal() {}
 
 	virtual int32 GetPlayerIndex();
 
