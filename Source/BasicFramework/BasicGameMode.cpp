@@ -17,6 +17,37 @@ void ABasicGameMode::InitGame(const FString & MapName, const FString & Options, 
 
 }
 
+bool ABasicGameMode::IsGamePaused() const
+{
+	return bGamePaused;
+}
+
+void ABasicGameMode::SetGamePaused(bool val)
+{
+	if (!bGamePaused && val)
+	{
+		if (pauseWidgetClass != nullptr)
+		{
+			pauseWidget = CreateWidget<UUserWidget>(GetGameInstance(), pauseWidgetClass);
+		}
+		if (pauseWidget != nullptr)
+		{
+			pauseWidget->AddToViewport(1);
+		}
+	}
+	if (bGamePaused && !val)
+	{
+		if (pauseWidget != nullptr)
+		{
+			pauseWidget->RemoveFromViewport();
+			pauseWidget = nullptr;
+		}
+	}
+	
+	bGamePaused = val;
+	GetDefaultPlayerController()->SetPause(val);
+}
+
 // Called when the game starts or when spawned
 void ABasicGameMode::BeginPlay()
 {

@@ -39,7 +39,7 @@ void UInteractionComponent::Execute_Internal(UObject * caller, UActorComponent* 
 	
 	PreExecution(caller, component, interactionType);
 
-	/** iIf async the following must be called inside each _Execution() method */
+	/** ATTENTION if async make sure the following methods must be called inside each other */
 	if (!bIsAsync)
 	{
 		Execution(caller, component, interactionType);

@@ -8,6 +8,7 @@
 #include "BasicCharacter.h"
 #include "BasicPlayerController.h"
 #include "SettingsManager.h"
+#include "Runtime/UMG/Public/Blueprint/UserWidget.h"
 #include "BasicGameMode.generated.h"
 
 /**
@@ -36,6 +37,13 @@ protected:
 		// Called when the game starts or when spawned
 		virtual void BeginPlay() override;
 
+		bool bGamePaused = false;
+
+		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UserInterface")
+		TSubclassOf<class UUserWidget> pauseWidgetClass = nullptr;
+
+		UUserWidget* pauseWidget = nullptr;
+
 public:
 
 		/** Initialize the game. Called before any other function including PreInitializeComponents()
@@ -44,6 +52,12 @@ public:
 		@param ErrorMessage
 		*/
 		virtual void InitGame(const FString & MapName, const FString & Options, FString & ErrorMessage) override;
+
+		UFUNCTION(BlueprintCallable)
+		bool IsGamePaused() const;
+
+		UFUNCTION(BlueprintCallable)
+		virtual void SetGamePaused(bool val);
 
 		UFUNCTION(BlueprintCallable, BlueprintPure)
 		ABasicCharacter* GetDefaultCharacter() const;
