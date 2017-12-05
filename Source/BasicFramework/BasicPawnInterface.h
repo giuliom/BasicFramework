@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Runtime/CoreUObject/Public/UObject/Interface.h"
+#include "Runtime/GameplayTags/Classes/GameplayTagContainer.h"
 #include "BasicPawnInterface.generated.h"
 
 // This class does not need to be modified.
@@ -16,6 +17,7 @@ class BASICFRAMEWORK_API UBasicPawnInterface : public UInterface
 /**
  * @author Giulio_M
  *
+ * Interface providing common methods to any actor that must receive input
  */
 class BASICFRAMEWORK_API IBasicPawnInterface
 {
@@ -26,6 +28,8 @@ protected:
 
 	bool bMovementEnabled = true;
 	bool bRotationEnabled = true;
+
+	FGameplayTag gameplayTag;
 
 public:
 	
@@ -61,6 +65,11 @@ public:
 	void SetRotationEnabled_Implementation(bool val) { SetRotationEnabled_Internal(val); }
 	virtual void SetRotationEnabled_Internal(bool val) { bRotationEnabled = val; }
 
+	//UFUNCTION(BlueprintCallable)
+	FGameplayTag GetGameplayTag() const { return gameplayTag; }
+
+	//UFUNCTION(BlueprintCallable)
+	void SetGameplayTag(FGameplayTag t) { gameplayTag = t; }
 
 
 	//----------------------- INPUT PROCESSING METHODS -----------------------
