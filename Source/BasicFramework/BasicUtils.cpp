@@ -18,3 +18,23 @@ void UBasicUtils::SetActorEnabled(AActor* actor, bool enabled)
 	}
 }
 
+UActorComponent * UBasicUtils::LineTraceComponent(FHitResult & outHit, AActor* actor, UClass * componentClass, const FVector & start, const FVector & end, ECollisionChannel channel, bool ignoreActor)
+{
+	FCollisionObjectQueryParams objParams;
+	objParams.AddObjectTypesToQuery(channel);
+
+	FCollisionQueryParams params;
+	if (ignoreActor) params.AddIgnoredActor(actor);
+
+	bool bHit = actor->GetWorld()->LineTraceSingleByObjectType(outHit, start, end, objParams, params);
+
+	if (bHit)
+	{
+		// Hit.Actor contains a weak pointer to the Actor that the trace hit
+		return outHit.Actor.Get()->GetComponentByClass(componentClass);
+	}
+	else
+	{
+		return nullptr;
+	}
+}

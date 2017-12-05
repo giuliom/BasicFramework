@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "CollisionQueryParams.h"
 #include "BasicUtils.generated.h"
 
 
@@ -23,7 +24,8 @@ public:
 	* Disable or enable the actors and all its components 
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Basic Utils")
-		static void SetActorEnabled(AActor* actor, bool enabled);
+	static void SetActorEnabled(AActor* actor, bool enabled);
 
-
+	UFUNCTION(BlueprintCallable, Category = "Basic Utils")
+	static UActorComponent* LineTraceComponent(FHitResult& outHit, AActor* actor, UClass* componentClass, const FVector& start, const FVector& end, ECollisionChannel channel = ECollisionChannel::ECC_GameTraceChannel1, bool ignoreActor = true);
 };
