@@ -6,6 +6,7 @@
 #include "GameFramework/Pawn.h"
 #include "Runtime/Engine/Classes/Camera/CameraComponent.h"
 #include "Runtime/Engine/Classes/GameFramework/DefaultPawn.h"
+#include "Runtime/GameplayTags/Classes/GameplayTagContainer.h"
 #include "BasicPawnInterface.h"
 #include "BasicPawn.generated.h"
 
@@ -23,6 +24,8 @@ protected:
 
 	UCameraComponent* cameraComponent = nullptr;
 
+	FGameplayTag gameplayTag;
+
 public:
 	// Sets default values for this pawn's properties
 	ABasicPawn(const FObjectInitializer & ObjectInitializer);
@@ -37,6 +40,12 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	//UFUNCTION(BlueprintCallable)
+	FGameplayTag GetGameplayTag() const { return gameplayTag; }
+
+	//UFUNCTION(BlueprintCallable)
+	void SetGameplayTag(FGameplayTag t) { gameplayTag = t; }
 
 	//----------------------- INPUT PROCESSING METHODS -----------------------
 
