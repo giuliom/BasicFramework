@@ -108,10 +108,10 @@ public:
 		virtual bool Interact(EBasicInteractionType iType = EBasicInteractionType::DEFAULT);
 
 	// Called by BasicPlayerController after possessing the character. BlueprintNativeEvent
-		virtual void OnPossessInternal_Implementation(int32 index) override;
+		virtual void OnPossess_Internal(int32 index) override;
 
 	// Called by BasicPlayerController before possessing another character. BlueprintNativeEvent
-		virtual void OnUnpossessInternal_Implementation() override;
+		virtual void OnUnpossess_Internal() override;
 
 
 	//----------------------- MOVEMENT METHODS -----------------------
@@ -123,47 +123,47 @@ public:
 
 	//----------------------- INPUT PROCESSING METHODS -----------------------
 	
-	virtual void ProcessInputForwardInternal_Implementation(float val) override;
-	virtual void ProcessInputRightInternal_Implementation(float val) override;
+	virtual void ProcessInputForward_Internal(float val) override;
+	virtual void ProcessInputRight_Internal(float val) override;
 
-	virtual void ProcessInputButtonAInternal_Implementation() override;
-	virtual void ProcessInputButtonA_ReleasedInternal_Implementation() override;
+	virtual void ProcessInputButtonA_Internal() override;
+	virtual void ProcessInputButtonA_Released_Internal() override;
 
-	virtual void ProcessInputButtonBInternal_Implementation() override;
-	virtual void ProcessInputButtonB_ReleasedInternal_Implementation() override;
+	virtual void ProcessInputButtonB_Internal() override;
+	virtual void ProcessInputButtonB_Released_Internal() override;
 
-	virtual void ProcessInputButtonXInternal_Implementation() override;
-	virtual void ProcessInputButtonX_ReleasedInternal_Implementation() override;
+	virtual void ProcessInputButtonX_Internal() override;
+	virtual void ProcessInputButtonX_Released_Internal() override;
 
-	virtual void ProcessInputButtonYInternal_Implementation() override;
-	virtual void ProcessInputButtonY_ReleasedInternal_Implementation() override;
+	virtual void ProcessInputButtonY_Internal() override;
+	virtual void ProcessInputButtonY_Released_Internal() override;
 
-	virtual void ProcessInputLeftBumperInternal_Implementation() override;
-	virtual void ProcessInputLeftBumper_ReleasedInternal_Implementation() override;
+	virtual void ProcessInputLeftBumper_Internal() override;
+	virtual void ProcessInputLeftBumper_Released_Internal() override;
 
-	virtual void ProcessInputRightBumperInternal_Implementation() override;
-	virtual void ProcessInputRightBumper_ReleasedInternal_Implementation() override;
+	virtual void ProcessInputRightBumper_Internal() override;
+	virtual void ProcessInputRightBumper_Released_Internal() override;
 
-	virtual void ProcessInputStartInternal_Implementation() override;
-	virtual void ProcessInputStart_ReleasedInternal_Implementation() override;
+	virtual void ProcessInputStart_Internal() override;
+	virtual void ProcessInputStart_Released_Internal() override;
 
-	virtual void ProcessInputBackInternal_Implementation() override;
-	virtual void ProcessInputBack_ReleasedInternal_Implementation() override;
+	virtual void ProcessInputBack_Internal() override;
+	virtual void ProcessInputBack_Released_Internal() override;
 
-	virtual void ProcessInputLeftTriggerInternal_Implementation(float val) override;
-	virtual void ProcessInputRightTriggerInternal_Implementation(float val) override;
+	virtual void ProcessInputLeftTrigger_Internal(float val) override;
+	virtual void ProcessInputRightTrigger_Internal(float val) override;
 
-	virtual void ProcessInputRotateRightInternal_Implementation(float val) override; //Yaw
-	virtual void ProcessInputRotateUpInternal_Implementation(float val) override; //Pitch
-
-	/**
-	* @param Rate	This is a normalized rate, 1.0 means full rate
-	*/
-	virtual void ProcessInputTurnAtRateInternal_Implementation(float val) override;
+	virtual void ProcessInputRotateRight_Internal(float val) override; //Yaw
+	virtual void ProcessInputRotateUp_Internal(float val) override; //Pitch
 
 	/**
 	* @param Rate	This is a normalized rate, 1.0 means full rate
 	*/
-	virtual void ProcessInputLookUpAtRateInternal_Implementation(float val) override;
+	virtual void ProcessInputTurnAtRate_Internal(float val) override;
+
+	/**
+	* @param Rate	This is a normalized rate, 1.0 means full rate
+	*/
+	virtual void ProcessInputLookUpAtRate_Internal(float val) override;
 
 };
