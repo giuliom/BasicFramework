@@ -18,7 +18,7 @@ ABasicCharacter::ABasicCharacter(const FObjectInitializer & ObjectInitializer)
 	firstPersonCameraComponent->RelativeLocation = FVector(0.0f, 20.0f, 00.0f); // Position the camera
 	firstPersonCameraComponent->RelativeRotation = FRotator(0.0f, 90.0f, 0.0f);
 	USceneComponent* mesh = (USceneComponent*) GetMesh();
-	firstPersonCameraComponent->SetupAttachment(mesh , FName("Camera"));
+	firstPersonCameraComponent->SetupAttachment(mesh , cameraSocket);
 	firstPersonCameraComponent->bUsePawnControlRotation = true;
 
 	movementComponent = GetCharacterMovement();

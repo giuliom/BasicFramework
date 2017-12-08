@@ -33,6 +33,9 @@ protected:
 
 	float maxSpeedCached = 0.0f;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera)
+		FName cameraSocket = "head";
+
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera)
 		float BaseTurnRate = 30.0f;
