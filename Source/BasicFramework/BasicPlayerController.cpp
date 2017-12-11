@@ -43,7 +43,7 @@ void ABasicPlayerController::SetupInputComponent()
 	InputComponent->BindAction(*buttonRB, IE_Released, this, &ABasicPlayerController::ProcessInputRightBumper_Released);
 
 	InputComponent->BindAction(*buttonStart, IE_Pressed, this, &ABasicPlayerController::ProcessInputStart);
-	InputComponent->BindAction(*buttonStart, IE_Released, this, &ABasicPlayerController::ProcessInputStart_Released);
+	InputComponent->BindAction(*buttonStart, IE_Released, this, &ABasicPlayerController::ProcessInputStart_Released).bExecuteWhenPaused = true; //Because it's the pause button
 
 	InputComponent->BindAction(*buttonBack, IE_Pressed, this, &ABasicPlayerController::ProcessInputBack);
 	InputComponent->BindAction(*buttonBack, IE_Released, this, &ABasicPlayerController::ProcessInputBack_Released);

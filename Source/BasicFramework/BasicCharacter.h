@@ -8,6 +8,7 @@
 #include "BasicInteractionType.h"
 #include "BasicPawnInterface.h"
 #include "BasicInteractionComponent.h"
+#include "BasicCharacterMovementComponent.h"
 #include "BasicCharacter.generated.h"
 
 
@@ -29,7 +30,7 @@ protected:
 	bool bIsRunning = false;
 	bool bIsJumping = false;
 
-	UCharacterMovementComponent* movementComponent = nullptr;
+	UBasicCharacterMovementComponent* movementComponent = nullptr;
 
 	float maxSpeedCached = 0.0f;
 
@@ -63,6 +64,8 @@ protected:
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	virtual void PauseGame();
 
 public:	
 

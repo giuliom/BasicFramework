@@ -5,10 +5,11 @@
 #include "Camera/CameraComponent.h"
 #include "BasicInteractionType.h"
 #include "BasicUtils.h"
+#include "BasicGameMode.h"
 #include "Runtime/Engine/Public/DrawDebugHelpers.h"
 
 // Sets default values
-ABasicCharacter::ABasicCharacter(const FObjectInitializer & ObjectInitializer)
+ABasicCharacter::ABasicCharacter(const FObjectInitializer & ObjectInitializer) : ACharacter(ObjectInitializer.SetDefaultSubobjectClass<UBasicCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -21,7 +22,7 @@ ABasicCharacter::ABasicCharacter(const FObjectInitializer & ObjectInitializer)
 	firstPersonCameraComponent->SetupAttachment(mesh , cameraSocket);
 	firstPersonCameraComponent->bUsePawnControlRotation = true;
 
-	movementComponent = GetCharacterMovement();
+	movementComponent = Cast<UBasicCharacterMovementComponent> (GetCharacterMovement());
 }
 
 
@@ -31,6 +32,13 @@ void ABasicCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 	maxSpeedCached = movementComponent->MaxWalkSpeed;
+}
+
+
+void ABasicCharacter::PauseGame()
+{
+	ABasicGameMode* mode = Cast<ABasicGameMode>(GetWorld()->GetAuthGameMode());
+	mode->SetGamePaused(!mode->IsGamePaused());
 }
 
 
@@ -225,6 +233,7 @@ void ABasicCharacter::ProcessInputStart_Internal()
 
 void ABasicCharacter::ProcessInputStart_Released_Internal()
 {
+	PauseGame();
 }
 
 void ABasicCharacter::ProcessInputBack_Internal()
