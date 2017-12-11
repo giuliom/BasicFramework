@@ -18,12 +18,12 @@ void UBasicUtils::SetActorEnabled(AActor* actor, bool enabled)
 	}
 }
 
-AActor * UBasicUtils::FindActorByName(FString & name)
+AActor * UBasicUtils::FindActorByName(FString name)
 {
 	return FindObject<AActor>(nullptr, *name);;
 }
 
-TArray<AActor*> UBasicUtils::FindActorsByTag(UWorld* world, FName & tag)
+TArray<AActor*> UBasicUtils::FindActorsByTag(UWorld* world, FName tag)
 {
 	check(world != nullptr);
 
