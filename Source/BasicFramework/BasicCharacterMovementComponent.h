@@ -36,7 +36,7 @@ public:
 	void SetMovementMode(EMovementMode NewMovementMode, uint8 NewCustomMode) override;
 
 	UFUNCTION(BlueprintCallable)
-	EBasicCharacterCustomMovementMode GetCustomMovementMode() { return static_cast<EBasicCharacterCustomMovementMode>(CustomMovementMode); }
+	EBasicCharacterCustomMovementMode GetCustomMovementMode() const { return static_cast<EBasicCharacterCustomMovementMode>(CustomMovementMode); }
 	
 	
 };

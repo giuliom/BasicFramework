@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "CollisionQueryParams.h"
+#include "Runtime/Engine/Public/EngineUtils.h"
 #include "BasicUtils.generated.h"
 
 
@@ -25,6 +26,12 @@ public:
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Basic Utils")
 	static void SetActorEnabled(AActor* actor, bool enabled);
+
+	UFUNCTION(BlueprintCallable, Category = "Basic Utils")
+	static AActor* FindActorByName(FString& name);
+
+	UFUNCTION(BlueprintCallable, Category = "Basic Utils")
+	static TArray<AActor*> FindActorsByTag(UWorld* world, FName& tag);
 
 	UFUNCTION(BlueprintCallable, Category = "Basic Utils")
 	static UActorComponent* LineTraceComponent(FHitResult& outHit, AActor* actor, UClass* componentClass, const FVector& start, const FVector& end, ECollisionChannel channel = ECollisionChannel::ECC_GameTraceChannel1, bool ignoreActor = true);

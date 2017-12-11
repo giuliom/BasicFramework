@@ -18,6 +18,28 @@ void UBasicUtils::SetActorEnabled(AActor* actor, bool enabled)
 	}
 }
 
+AActor * UBasicUtils::FindActorByName(FString & name)
+{
+	return FindObject<AActor>(nullptr, *name);;
+}
+
+TArray<AActor*> UBasicUtils::FindActorsByTag(UWorld* world, FName & tag)
+{
+	check(world != nullptr);
+
+	TArray<AActor*> list;
+
+	for (TActorIterator<AActor> It(world); It; ++It)
+	{
+		AActor* actor = *It;
+		if (actor->ActorHasTag(tag))
+		{
+			list.Add(actor);
+		}
+	}
+	return list;
+}
+
 UActorComponent * UBasicUtils::LineTraceComponent(FHitResult & outHit, AActor* actor, UClass * componentClass, const FVector & start, const FVector & end, ECollisionChannel channel, bool ignoreActor)
 {
 	FCollisionObjectQueryParams objParams;
