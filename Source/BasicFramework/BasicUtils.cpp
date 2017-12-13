@@ -40,9 +40,11 @@ TArray<AActor*> UBasicUtils::FindActorsByTag(UWorld* world, FName tag)
 	return list;
 }
 
-UActorComponent * UBasicUtils::LineTraceComponent(FHitResult & outHit, AActor* actor, UClass * componentClass, const FVector & start, const FVector & end, ECollisionChannel channel, bool ignoreActor)
+UActorComponent * UBasicUtils::LineTraceComponent(FHitResult & outHit, AActor* actor, UClass * componentClass, const FVector & start, const FVector & end, ECollisionChannel channel, bool worldStaticCollision, bool worldDynamicCollision, bool ignoreActor)
 {
 	FCollisionObjectQueryParams objParams;
+	if (worldStaticCollision) objParams.AddObjectTypesToQuery(ECollisionChannel::ECC_WorldStatic);
+	if (worldDynamicCollision) objParams.AddObjectTypesToQuery(ECollisionChannel::ECC_WorldDynamic);
 	objParams.AddObjectTypesToQuery(channel);
 
 	FCollisionQueryParams params;

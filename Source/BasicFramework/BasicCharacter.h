@@ -24,11 +24,23 @@ class BASICFRAMEWORK_API ABasicCharacter : public ACharacter, public IBasicPawnI
 
 protected:
 	
+	/*
+	* --- STATES (so far) ---
+	* WALK
+	* RUN
+	* JUMP
+	* CROUCH
+	* SWIMMING
+	*/
 	bool bCanJump = true;
 	bool bCanRun = true;
+	bool bCanCrouch = true;
+
 	bool bIsWalking = false;
 	bool bIsRunning = false;
 	bool bIsJumping = false;
+	bool bIsCrouching = false;
+	bool bIsSwimming = false;
 
 	UBasicCharacterMovementComponent* movementComponent = nullptr;
 
@@ -85,8 +97,8 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UFUNCTION(BlueprintCallable)
-		FORCEINLINE bool IsWalking() const { return bIsWalking; }
+
+	//----------------------- MOVEMENT METHODS -----------------------
 
 	UFUNCTION(BlueprintCallable)
 		void SetCanJump(bool val) { bCanJump = val; }
@@ -95,16 +107,32 @@ public:
 		void SetCanRun(bool val) { bCanRun = val; }
 
 	UFUNCTION(BlueprintCallable)
+		void SetCanCrouch(bool val) { bCanCrouch = val; }
+
+	UFUNCTION(BlueprintCallable)
+		FORCEINLINE bool IsWalking() const { return bIsWalking; }
+
+	UFUNCTION(BlueprintCallable)
 		FORCEINLINE bool IsRunning() const { return bIsRunning; }
+
+	UFUNCTION(BlueprintCallable)
+		FORCEINLINE bool IsJumping() const { return bIsJumping; }
+
+	UFUNCTION(BlueprintCallable)
+		FORCEINLINE bool IsCrouching() const { return bIsCrouching; }
 
 	UFUNCTION(BlueprintCallable)
 		void SetRunning(bool val);
 
+	UFUNCTION(BlueprintCallable)
+		void SetSwimming(bool enabled);
+
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 		EMovementMode GetMovementMode() const { return GetCharacterMovement()->MovementMode.GetValue(); }
 
-	UFUNCTION(BlueprintCallable)
-		virtual void SetSwimming(bool enabled);
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+		EBasicCharacterCustomMovementMode GetCustomMovementMode() const { return movementComponent->GetCustomMovementMode(); }
+
 
 
 	//----------------------- GAMEPLAY METHODS -----------------------

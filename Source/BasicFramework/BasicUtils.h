@@ -35,5 +35,6 @@ public:
 	static TArray<AActor*> FindActorsByTag(UWorld* world, FName tag);
 
 	UFUNCTION(BlueprintCallable, Category = "Basic Utils")
-	static UActorComponent* LineTraceComponent(FHitResult& outHit, AActor* actor, UClass* componentClass, const FVector& start, const FVector& end, ECollisionChannel channel = ECollisionChannel::ECC_GameTraceChannel1, bool ignoreActor = true);
+	static UActorComponent* LineTraceComponent(FHitResult& outHit, AActor* actor, UClass* componentClass, const FVector& start, const FVector& end, 
+											ECollisionChannel channel = ECollisionChannel::ECC_GameTraceChannel1, bool worldStaticCollision = true, bool worldDynamicCollision = true, bool ignoreActor = true);
 };
