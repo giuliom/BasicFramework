@@ -66,6 +66,18 @@ void ABasicCharacter::SetRunning(bool val)
 	movementComponent->MaxWalkSpeed = val ? maxSpeedCached * runningSpeedMultiplier : maxSpeedCached;
 }
 
+void ABasicCharacter::SetCrouching(bool val)
+{
+	if (val)
+	{
+		if (bCanCrouch) movementComponent->Crouch();
+	}
+	else
+	{
+		movementComponent->UnCrouch();
+	}
+}
+
 void ABasicCharacter::SetSwimming(bool enabled)
 {
 	if (enabled) 
@@ -176,7 +188,7 @@ void ABasicCharacter::ProcessInputButtonB_Internal()
 
 void ABasicCharacter::ProcessInputButtonB_Released_Internal()
 {
-
+	SetCrouching(!IsCrouching());
 }
 
 

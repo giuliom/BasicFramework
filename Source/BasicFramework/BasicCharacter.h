@@ -35,12 +35,11 @@ protected:
 	bool bCanJump = true;
 	bool bCanRun = true;
 	bool bCanCrouch = true;
+	bool bCanSwim = true;
 
 	bool bIsWalking = false;
 	bool bIsRunning = false;
 	bool bIsJumping = false;
-	bool bIsCrouching = false;
-	bool bIsSwimming = false;
 
 	UBasicCharacterMovementComponent* movementComponent = nullptr;
 
@@ -51,11 +50,11 @@ protected:
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera)
-		float BaseTurnRate = 30.0f;
+		float BaseTurnRate = 100.0f;
 
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera)
-		float BaseLookUpRate = 30.0f;
+		float BaseLookUpRate = 100.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Movement)
 		float runningSpeedMultiplier = 2.0f;
@@ -66,10 +65,10 @@ protected:
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
-		float turnRateMultiplier = 30.0f;
+		float turnRateMultiplier = 1.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
-		float lookUpRateMultiplier = 30.0f;
+		float lookUpRateMultiplier = 1.0f;
 
 
 protected:
@@ -119,10 +118,19 @@ public:
 		FORCEINLINE bool IsJumping() const { return bIsJumping; }
 
 	UFUNCTION(BlueprintCallable)
-		FORCEINLINE bool IsCrouching() const { return bIsCrouching; }
+		FORCEINLINE bool IsCrouching() const { return bCanCrouch && movementComponent->IsCrouching(); }
+
+	UFUNCTION(BlueprintCallable)
+		FORCEINLINE bool IsSwimming() const { return bCanSwim && movementComponent->IsSwimming(); }
+
+	UFUNCTION(BlueprintCallable)
+		FORCEINLINE bool IsFalling() const { return movementComponent->IsFalling(); }
 
 	UFUNCTION(BlueprintCallable)
 		void SetRunning(bool val);
+
+	UFUNCTION(BlueprintCallable)
+		void SetCrouching(bool val);
 
 	UFUNCTION(BlueprintCallable)
 		void SetSwimming(bool enabled);
