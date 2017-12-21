@@ -80,7 +80,7 @@ void ABasicCharacter::SetCrouching(bool val)
 
 void ABasicCharacter::SetSwimming(bool enabled)
 {
-	if (enabled) 
+	if (enabled && bCanSwim) 
 	{
 		GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Swimming);
 	}
@@ -188,7 +188,8 @@ void ABasicCharacter::ProcessInputButtonB_Internal()
 
 void ABasicCharacter::ProcessInputButtonB_Released_Internal()
 {
-	SetCrouching(!IsCrouching());
+	bool shouldcrouch = !IsCrouching();
+	SetCrouching(shouldcrouch);
 }
 
 

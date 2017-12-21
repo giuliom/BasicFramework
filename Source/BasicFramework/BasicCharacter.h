@@ -24,20 +24,12 @@ class BASICFRAMEWORK_API ABasicCharacter : public ACharacter, public IBasicPawnI
 
 protected:
 	
-	/*
-	* --- STATES (so far) ---
-	* WALK
-	* RUN
-	* JUMP
-	* CROUCH
-	* SWIMMING
-	*/
+	/* GENERAL MOVEMENT PROPERTIES	*/
 	bool bCanJump = true;
 	bool bCanRun = true;
 	bool bCanCrouch = true;
 	bool bCanSwim = true;
 
-	bool bIsWalking = false;
 	bool bIsRunning = false;
 	bool bIsJumping = false;
 
@@ -109,16 +101,16 @@ public:
 		void SetCanCrouch(bool val) { bCanCrouch = val; }
 
 	UFUNCTION(BlueprintCallable)
-		FORCEINLINE bool IsWalking() const { return bIsWalking; }
+		FORCEINLINE bool IsWalking() const { return movementComponent->IsWalking(); }
 
 	UFUNCTION(BlueprintCallable)
-		FORCEINLINE bool IsRunning() const { return bIsRunning; }
+		FORCEINLINE bool IsRunning() const { return movementComponent->IsWalking() && bIsRunning; }
 
 	UFUNCTION(BlueprintCallable)
 		FORCEINLINE bool IsJumping() const { return bIsJumping; }
 
 	UFUNCTION(BlueprintCallable)
-		FORCEINLINE bool IsCrouching() const { return bCanCrouch && movementComponent->IsCrouching(); }
+		FORCEINLINE bool IsCrouching() const { return bCanCrouch && movementComponent->IsCrouching() ; }
 
 	UFUNCTION(BlueprintCallable)
 		FORCEINLINE bool IsSwimming() const { return bCanSwim && movementComponent->IsSwimming(); }
