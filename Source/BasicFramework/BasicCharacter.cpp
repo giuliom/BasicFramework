@@ -8,6 +8,8 @@
 #include "BasicGameMode.h"
 #include "Runtime/Engine/Public/DrawDebugHelpers.h"
 
+#pragma optimize("", off)
+
 // Sets default values
 ABasicCharacter::ABasicCharacter(const FObjectInitializer & ObjectInitializer) : ACharacter(ObjectInitializer.SetDefaultSubobjectClass<UBasicCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
@@ -18,8 +20,9 @@ ABasicCharacter::ABasicCharacter(const FObjectInitializer & ObjectInitializer) :
 	firstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
 	firstPersonCameraComponent->RelativeLocation = FVector(0.0f, 20.0f, 00.0f); // Position the camera
 	firstPersonCameraComponent->RelativeRotation = FRotator(0.0f, 90.0f, 0.0f);
-	USceneComponent* mesh = (USceneComponent*) GetMesh();
-	firstPersonCameraComponent->SetupAttachment(mesh , cameraSocket);
+	
+	
+	
 	firstPersonCameraComponent->bUsePawnControlRotation = true;
 
 	movementComponent = Cast<UBasicCharacterMovementComponent> (GetCharacterMovement());
@@ -30,7 +33,11 @@ ABasicCharacter::ABasicCharacter(const FObjectInitializer & ObjectInitializer) :
 void ABasicCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	USceneComponent* mesh = (USceneComponent*)GetMesh();
+	bool sock = mesh->DoesSocketExist(TEXT("headSocket"));
+	firstPersonCameraComponent->SetupAttachment(mesh, TEXT("headSocket"));
+
 	maxSpeedCached = movementComponent->MaxWalkSpeed;
 }
 
@@ -70,11 +77,13 @@ void ABasicCharacter::SetCrouching(bool val)
 {
 	if (val)
 	{
-		if (bCanCrouch) movementComponent->Crouch();
+		if (bCanCrouch) {
+			Crouch();
+		}
 	}
 	else
 	{
-		movementComponent->UnCrouch();
+		UnCrouch();
 	}
 }
 
@@ -298,3 +307,5 @@ void ABasicCharacter::ProcessInputLookUpAtRate_Internal(float val)
 	// calculate delta for this frame from the rate information
 	ProcessInputRotateUp_Internal(val * BaseLookUpRate * lookUpRateMultiplier * GetWorld()->GetDeltaSeconds());
 }
+
+#pragma optimize("", on)

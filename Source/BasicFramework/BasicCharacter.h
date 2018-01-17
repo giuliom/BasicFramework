@@ -38,7 +38,7 @@ protected:
 	float maxSpeedCached = 0.0f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera)
-		FName cameraSocket = "head";
+		FName cameraSocket = "headSocket";
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera)
@@ -110,7 +110,7 @@ public:
 		FORCEINLINE bool IsJumping() const { return bIsJumping; }
 
 	UFUNCTION(BlueprintCallable)
-		FORCEINLINE bool IsCrouching() const { return bCanCrouch && movementComponent->IsCrouching() ; }
+		FORCEINLINE bool IsCrouching() const { return bCanCrouch && movementComponent->IsCrouching(); }
 
 	UFUNCTION(BlueprintCallable)
 		FORCEINLINE bool IsSwimming() const { return bCanSwim && movementComponent->IsSwimming(); }
