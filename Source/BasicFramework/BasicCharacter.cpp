@@ -8,7 +8,7 @@
 #include "BasicGameMode.h"
 #include "Runtime/Engine/Public/DrawDebugHelpers.h"
 
-#pragma optimize("", off)
+//#pragma optimize("", off)
 
 // Sets default values
 ABasicCharacter::ABasicCharacter(const FObjectInitializer & ObjectInitializer) : ACharacter(ObjectInitializer.SetDefaultSubobjectClass<UBasicCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
@@ -308,4 +308,4 @@ void ABasicCharacter::ProcessInputLookUpAtRate_Internal(float val)
 	ProcessInputRotateUp_Internal(val * BaseLookUpRate * lookUpRateMultiplier * GetWorld()->GetDeltaSeconds());
 }
 
-#pragma optimize("", on)
+//#pragma optimize("", on)
