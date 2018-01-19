@@ -7,6 +7,7 @@
 #include "BasicUtils.h"
 #include "BasicGameMode.h"
 #include "Runtime/Engine/Public/DrawDebugHelpers.h"
+#include "Runtime/Engine/Classes/Components/SkeletalMeshComponent.h"
 
 //#pragma optimize("", off)
 
@@ -18,11 +19,6 @@ ABasicCharacter::ABasicCharacter(const FObjectInitializer & ObjectInitializer) :
 
 	// Create a CameraComponent	
 	firstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
-	firstPersonCameraComponent->RelativeLocation = FVector(0.0f, 20.0f, 00.0f); // Position the camera
-	firstPersonCameraComponent->RelativeRotation = FRotator(0.0f, 90.0f, 0.0f);
-	
-	
-	
 	firstPersonCameraComponent->bUsePawnControlRotation = true;
 
 	movementComponent = Cast<UBasicCharacterMovementComponent> (GetCharacterMovement());
@@ -34,9 +30,9 @@ void ABasicCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	USceneComponent* mesh = (USceneComponent*)GetMesh();
-	bool sock = mesh->DoesSocketExist(TEXT("headSocket"));
-	firstPersonCameraComponent->SetupAttachment(mesh, TEXT("headSocket"));
+	firstPersonCameraComponent->AttachTo(GetMesh(), cameraSocket, EAttachLocation::SnapToTarget);
+	firstPersonCameraComponent->RelativeLocation = FVector(0.0f, 20.0f, 00.0f); // Position the camera
+	firstPersonCameraComponent->RelativeRotation = FRotator(0.0f, 90.0f, 0.0f);
 
 	maxSpeedCached = movementComponent->MaxWalkSpeed;
 }
