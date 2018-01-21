@@ -29,7 +29,7 @@ void UBasicCharacterMovementComponent::PhysCustom(float deltaTime, int32 Iterati
 void UBasicCharacterMovementComponent::PhysCustomLadder(float deltaTime, int32 Iterations)
 {
 	//TODO placeholder
-	PhysWalking(deltaTime,Iterations)
+	PhysWalking(deltaTime, Iterations);
 }
 
 void UBasicCharacterMovementComponent::SetMovementMode(EMovementMode NewMovementMode, uint8 NewCustomMode)
