@@ -141,6 +141,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 		virtual bool Interact(EBasicInteractionType iType = EBasicInteractionType::DEFAULT);
 
+	UFUNCTION(BlueprintCallable)
+		virtual bool HighlightInteractableObject();
+
+
 	// Called by BasicPlayerController after possessing the character. BlueprintNativeEvent
 		virtual void OnPossess_Internal(int32 index) override;
 

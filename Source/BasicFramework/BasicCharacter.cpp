@@ -110,7 +110,6 @@ bool ABasicCharacter::Interact(EBasicInteractionType iType)
 
 	if (result != nullptr)
 	{
-
 		if (result->CanBeExecuted() )
 		{
 			UActorComponent* component = (UActorComponent*)hit.GetComponent();
@@ -118,6 +117,11 @@ bool ABasicCharacter::Interact(EBasicInteractionType iType)
 			return true;
 		}
 	}
+	return false;
+}
+
+bool ABasicCharacter::HighlightInteractableObject()
+{
 	return false;
 }
 
