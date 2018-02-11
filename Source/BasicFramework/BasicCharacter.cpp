@@ -50,6 +50,7 @@ void ABasicCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	HighlightInteractableObject();
 }
 
 
@@ -122,7 +123,45 @@ bool ABasicCharacter::Interact(EBasicInteractionType iType)
 
 bool ABasicCharacter::HighlightInteractableObject()
 {
-	return false;
+	FHitResult hit;
+	UBasicInteractionComponent* result = Cast<UBasicInteractionComponent>(UBasicUtils::LineTraceComponent
+	(hit, this, UBasicInteractionComponent::StaticClass(), firstPersonCameraComponent->GetComponentLocation(), firstPersonCameraComponent->GetComponentLocation() + (firstPersonCameraComponent->GetForwardVector() * defaultRaycastDistance),
+		ECollisionChannel::ECC_GameTraceChannel1, true));
+
+	UPrimitiveComponent* primitive = nullptr;
+	bool bFound = false;
+
+	if (OnHighlightEvent.IsBound())
+	{
+		if (prevHighlightedObj != nullptr) OnHighlightEvent.Broadcast(prevHighlightedObj, false);
+	}
+	else
+	{
+		if (prevHighlightedObj != nullptr)prevHighlightedObj->SetRenderCustomDepth(false);
+	}
+
+	if (result != nullptr)
+	{
+		primitive = Cast<UPrimitiveComponent> (hit.Actor->GetComponentByClass(UPrimitiveComponent::StaticClass()));
+		
+		if (result->CanBeExecuted() && primitive != nullptr)
+		{
+			if (OnHighlightEvent.IsBound())
+			{
+				OnHighlightEvent.Broadcast(primitive, true);
+			}
+			else
+			{
+				primitive->SetRenderCustomDepth(true);
+			}
+			bFound = true;
+		}
+
+	}
+
+	prevHighlightedObj = primitive;
+
+	return bFound;
 }
 
 void ABasicCharacter::OnPossess_Internal(int32 index)

@@ -9,6 +9,7 @@
 #include "BasicPawnInterface.h"
 #include "BasicInteractionComponent.h"
 #include "BasicCharacterMovementComponent.h"
+#include "Runtime/Engine/Classes/Components/PrimitiveComponent.h"
 #include "BasicCharacter.generated.h"
 
 
@@ -17,6 +18,10 @@
 * Basic Character class for first person adventure games
 *
 */
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FHighlightEvent, UPrimitiveComponent*, primitive, bool, enabled);
+
+
 UCLASS(Blueprintable)
 class BASICFRAMEWORK_API ABasicCharacter : public ACharacter, public IBasicPawnInterface
 {
@@ -52,7 +57,13 @@ protected:
 		float runningSpeedMultiplier = 2.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-		float defaultRaycastDistance = 200.f;
+		float defaultRaycastDistance = 300.f;
+
+	/** Delegate used to define custom object highlighting effects */
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = Delegates)
+		FHighlightEvent OnHighlightEvent;
+
+	UPrimitiveComponent* prevHighlightedObj = nullptr;
 
 public:
 
