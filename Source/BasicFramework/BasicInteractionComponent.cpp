@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BasicInteractionComponent.h"
-
+#include "AssertionMacros.h"
 
 // Sets default values for this component's properties
 UBasicInteractionComponent::UBasicInteractionComponent()
@@ -48,10 +48,11 @@ void UBasicInteractionComponent::Execute(UObject * caller, UActorComponent* comp
 	}
 	else 
 	{
-		/** ATTENTION if async make sure the following delegates must be fired inside each other.
+		/** ATTENTION if async make sure the following delegates must be fired sequentially inside each other.
 		 Also OnPostExecution must call  PostExecutionSetup() TODO: bind to delegate
 		 */
-		check(OnPreExecution.IsBound() == OnExecution.IsBound() == OnPostExecution.IsBound());
+		ensureMsgf(OnPreExecution.IsBound() == OnExecution.IsBound() == OnPostExecution.IsBound(), TEXT("BasicInteractionComponent: if Async the delegated must be fired sequentially inside each other"));
+		if (!OnPostExecution.IsBound()) PostExecutionSetup(interactionType);
 	}
 
 
