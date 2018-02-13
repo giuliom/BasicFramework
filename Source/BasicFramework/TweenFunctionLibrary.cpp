@@ -2,6 +2,8 @@
 
 #include "TweenFunctionLibrary.h"
 #include "GameFramework/Actor.h"
+#include <EngineGlobals.h>
+#include <Runtime/Engine/Classes/Engine/Engine.h>
 
 /**
  * Creates a UTweenComponent and attach it to an Actor
@@ -34,29 +36,61 @@ UTweenComponent * UTweenFunctionLibrary::CreateTween(AActor * actor)
 */
 
 
-UTweenComponent * UTweenFunctionLibrary::TweenLocation(AActor * actor, FVector vOrigin, FVector vTarget, FTweenDynamicDelegate tdelegate, ETweenMode tweenMode, float targetTime, bool worldspace, bool loop, bool teleportPhysics)
+bool UTweenFunctionLibrary::CreateLatentAction(UTweenComponent * tween, UObject * worldContextObject, FLatentActionInfo latentInfo)
+{
+	if (UWorld* World = GEngine->GetWorldFromContextObject(worldContextObject))
+	{
+		FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
+		LatentActionManager.AddNewAction(latentInfo.CallbackTarget, latentInfo.UUID, new FTweenLatentAction(tween, latentInfo));
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+UTweenComponent * UTweenFunctionLibrary::TweenLocation(AActor * actor, FVector vOrigin, FVector vTarget, UObject * worldContextObject, FLatentActionInfo latentInfo, ETweenMode tweenMode, float targetTime, bool worldspace, bool loop, bool teleportPhysics)
 {
 	if (actor == nullptr) return nullptr;
 	UTweenComponent* tween = CreateTween(actor);
-	tween->InitTween(tweenMode, actor, tdelegate, vOrigin, vTarget, targetTime, worldspace, loop, teleportPhysics);
+	tween->InitTween(tweenMode, actor, vOrigin, vTarget, targetTime, worldspace, loop, teleportPhysics);
+
+	if (!CreateLatentAction(tween, worldContextObject, latentInfo))
+	{
+		tween->Destroy();
+	}
+
 	return tween;
 }
 
 
-UTweenComponent * UTweenFunctionLibrary::TweenRotation(AActor * actor, FRotator rOrigin, FRotator rTarget, FTweenDynamicDelegate tdelegate, ETweenMode tweenMode, float targetTime, bool loop, bool teleportPhysics)
+UTweenComponent * UTweenFunctionLibrary::TweenRotation(AActor * actor, FRotator rOrigin, FRotator rTarget, UObject * worldContextObject, FLatentActionInfo latentInfo, ETweenMode tweenMode, float targetTime, bool loop, bool teleportPhysics)
 {
 	if (actor == nullptr) return nullptr;
 	UTweenComponent* tween = CreateTween(actor);
-	tween->InitTween(tweenMode, actor, tdelegate, rOrigin, rTarget, targetTime, loop, teleportPhysics);
+	tween->InitTween(tweenMode, actor, rOrigin, rTarget, targetTime, loop, teleportPhysics);
+
+	if (!CreateLatentAction(tween, worldContextObject, latentInfo))
+	{
+		tween->Destroy();
+	}
+
 	return tween;
 }
 
 
-UTweenComponent * UTweenFunctionLibrary::TweenTransform(AActor * actor, FTransform tOrigin, FTransform tTarget, FTweenDynamicDelegate tdelegate, ETweenMode tweenMode, float targetTime, bool loop, bool teleportPhysics)
+UTweenComponent * UTweenFunctionLibrary::TweenTransform(AActor * actor, FTransform tOrigin, FTransform tTarget, UObject * worldContextObject, FLatentActionInfo latentInfo, ETweenMode tweenMode, float targetTime, bool loop, bool teleportPhysics)
 {
 	if (actor == nullptr) return nullptr;
 	UTweenComponent* tween = CreateTween(actor);
-	tween->InitTween(tweenMode, actor, tdelegate, tOrigin, tTarget, targetTime, loop, teleportPhysics);
+	tween->InitTween(tweenMode, actor, tOrigin, tTarget, targetTime, loop, teleportPhysics);
+
+	if (!CreateLatentAction(tween, worldContextObject, latentInfo))
+	{
+		tween->Destroy();
+	}
+
 	return tween;
 }
 

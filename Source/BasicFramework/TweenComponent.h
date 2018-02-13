@@ -83,26 +83,26 @@ protected:
 	// The ETeleportType used when setting a location
 	ETeleportType tType = ETeleportType::None;
 
+	bool isCompleted = false; 
+
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void InitTween(ETweenMode mode, AActor* actor, FTweenDynamicDelegate tdelegate, FVector vOrigin, FVector vTarget, float targetTime = 1.0f, bool worldspace = true, bool loop = false, bool teleportPhysics = false);
+	void InitTween(ETweenMode mode, AActor* actor, FVector vOrigin, FVector vTarget, float targetTime = 1.0f, bool worldspace = true, bool loop = false, bool teleportPhysics = false);
 
-	void InitTween(ETweenMode mode, AActor* actor, FTweenDynamicDelegate tdelegate, FRotator rOrigin, FRotator rTarget, float targetTime = 1.0f, bool worldspace = true, bool loop = false, bool teleportPhysics = false);
+	void InitTween(ETweenMode mode, AActor* actor, FRotator rOrigin, FRotator rTarget, float targetTime = 1.0f, bool worldspace = true, bool loop = false, bool teleportPhysics = false);
 
-	void InitTween(ETweenMode mode, AActor* actor, FTweenDynamicDelegate tdelegate, FTransform tOrigin, FTransform tTarget, float targetTime = 1.0f, bool worldspace = true, bool loop = false, bool teleportPhysics = false);
-	
+	void InitTween(ETweenMode mode, AActor* actor, FTransform tOrigin, FTransform tTarget, float targetTime = 1.0f, bool worldspace = true, bool loop = false, bool teleportPhysics = false);
 
-	FTweenDynamicDelegate& GetOnTweenCompleted() { return OnTweenCompleted; }
+	bool IsTweenCompleted() { return isCompleted; }
+
+	void Destroy();
 
 
 protected:
 
-	void BaseInitTween(ETweenMode mode, AActor* actor, FTweenDynamicDelegate tdelegate, float targetTime, bool worldspace = true, bool loop = false, bool teleportPhysics = false);
-
-	// Delegate and event broadcasted when the tween is completed
-	FTweenDynamicDelegate OnTweenCompleted;
+	void BaseInitTween(ETweenMode mode, AActor* actor, float targetTime, bool worldspace = true, bool loop = false, bool teleportPhysics = false);
 
 	virtual void BeginPlay() override;
 

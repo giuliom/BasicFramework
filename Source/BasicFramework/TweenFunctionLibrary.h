@@ -6,6 +6,8 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "Engine/EngineTypes.h"
 #include "TweenComponent.h"
+#include "Runtime/Engine/Classes/Engine/LatentActionManager.h"
+#include "LatentActions.h"
 #include "TweenFunctionLibrary.generated.h"
 
 /**
@@ -13,6 +15,27 @@
  *
  * A UBlueprintFunctionLibrary that Provides functions that create and instantiate a TweenComponent to an AACtor with the requested tweening mode
  */
+
+class FTweenLatentAction : public FPendingLatentAction
+{
+public:
+	UTweenComponent * tween;
+	FName ExecutionFunction;
+	int32 OutputLink;
+	FWeakObjectPtr CallbackTarget;
+	FTweenLatentAction(UTweenComponent* tween, const FLatentActionInfo& LatentInfo)
+		: tween(tween)
+		, ExecutionFunction(LatentInfo.ExecutionFunction)
+		, OutputLink(LatentInfo.Linkage)
+		, CallbackTarget(LatentInfo.CallbackTarget)
+	{}
+
+	virtual void UpdateOperation(FLatentResponse& Response) override
+	{
+		Response.FinishAndTriggerIf(tween != nullptr, ExecutionFunction, OutputLink, CallbackTarget);
+	}
+
+};
 
 
 UCLASS()
@@ -22,17 +45,19 @@ class BASICFRAMEWORK_API UTweenFunctionLibrary : public UBlueprintFunctionLibrar
 
 protected:
 		static UTweenComponent* CreateTween(AActor* actor);
+
+		static bool CreateLatentAction(UTweenComponent* tween, UObject * worldContextObject, FLatentActionInfo latentInfo);
 	
 public:
 
-		UFUNCTION(BlueprintCallable, Category = "Tween")
-		static UTweenComponent* TweenLocation(AActor* actor, FVector vOrigin, FVector vTarget, FTweenDynamicDelegate tdelegate, ETweenMode tweenMode = ETweenMode::LINEAR, float targetTime = 1.0f, bool worldspace = true, bool loop = false, bool teleportPhysics = false);
+		UFUNCTION(BlueprintCallable, Category = "Tween", meta = (Latent, LatentInfo = "LatentInfo", HidePin = "worldContextObject", DefaultToSelf = "worldContextObject"))
+		static UTweenComponent* TweenLocation(AActor* actor, FVector vOrigin, FVector vTarget, UObject * worldContextObject, FLatentActionInfo latentInfo, ETweenMode tweenMode = ETweenMode::LINEAR, float targetTime = 1.0f, bool worldspace = true, bool loop = false, bool teleportPhysics = false);
 		
-		UFUNCTION(BlueprintCallable, Category = "Tween")
-		static UTweenComponent* TweenRotation(AActor* actor, FRotator rOrigin, FRotator rTarget, FTweenDynamicDelegate tdelegate, ETweenMode tweenMode = ETweenMode::LINEAR, float targetTime = 1.0f, bool loop = false, bool teleportPhysics = false);
+		UFUNCTION(BlueprintCallable, Category = "Tween", meta = (Latent, LatentInfo = "LatentInfo", HidePin = "worldContextObject", DefaultToSelf = "worldContextObject"))
+		static UTweenComponent* TweenRotation(AActor* actor, FRotator rOrigin, FRotator rTarget, UObject * worldContextObject, FLatentActionInfo latentInfo, ETweenMode tweenMode = ETweenMode::LINEAR, float targetTime = 1.0f, bool loop = false, bool teleportPhysics = false);
 
-		UFUNCTION(BlueprintCallable, Category = "Tween")
-		static UTweenComponent* TweenTransform(AActor* actor, FTransform tOrigin, FTransform tTarget, FTweenDynamicDelegate tdelegate, ETweenMode tweenMode = ETweenMode::LINEAR, float targetTime = 1.0f, bool loop = false, bool teleportPhysics = false);
+		UFUNCTION(BlueprintCallable, Category = "Tween", meta = (Latent, LatentInfo = "LatentInfo", HidePin = "worldContextObject", DefaultToSelf = "worldContextObject"))
+		static UTweenComponent* TweenTransform(AActor* actor, FTransform tOrigin, FTransform tTarget, UObject * worldContextObject, FLatentActionInfo latentInfo, ETweenMode tweenMode = ETweenMode::LINEAR, float targetTime = 1.0f, bool loop = false, bool teleportPhysics = false);
 
 };
 

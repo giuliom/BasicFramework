@@ -46,9 +46,8 @@ void UTweenComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 		else
 		{
 			TickTween(1.0f);
-			OnTweenCompleted.ExecuteIfBound();
-			this->UnregisterComponent();
-			this->DestroyComponent();
+			isCompleted = true;
+			Destroy();
 		}
 	}
 }
@@ -69,38 +68,43 @@ void UTweenComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 * @param teleportPhysics if we must use teleportPhysics when updating the location
 */
 
-void UTweenComponent::InitTween(ETweenMode mode, AActor * actor, FTweenDynamicDelegate tdelegate, FVector vOrigin, FVector vTarget, float targetTime, bool worldspace, bool loop, bool teleportPhysics)
+void UTweenComponent::InitTween(ETweenMode mode, AActor * actor, FVector vOrigin, FVector vTarget, float targetTime, bool worldspace, bool loop, bool teleportPhysics)
 {
 	this->type = ETweenType::POSITION;
-	BaseInitTween(mode, actor, tdelegate, targetTime, worldspace, loop, teleportPhysics);
+	BaseInitTween(mode, actor, targetTime, worldspace, loop, teleportPhysics);
 	
 	this->vOrigin = vOrigin;
 	this->vTarget = vTarget;
 }
 
-void UTweenComponent::InitTween(ETweenMode mode, AActor * actor, FTweenDynamicDelegate tdelegate, FRotator rOrigin, FRotator rTarget, float targetTime, bool worldspace, bool loop, bool teleportPhysics)
+void UTweenComponent::InitTween(ETweenMode mode, AActor * actor, FRotator rOrigin, FRotator rTarget, float targetTime, bool worldspace, bool loop, bool teleportPhysics)
 {
 	this->type = ETweenType::ROTATION;
-	BaseInitTween(mode, actor, tdelegate, targetTime, worldspace, loop, teleportPhysics);
+	BaseInitTween(mode, actor, targetTime, worldspace, loop, teleportPhysics);
 
 	this->rOrigin = rOrigin;
 	this->rTarget = rTarget;
 }
 
-void UTweenComponent::InitTween(ETweenMode mode, AActor * actor, FTweenDynamicDelegate tdelegate, FTransform tOrigin, FTransform tTarget, float targetTime, bool worldspace, bool loop, bool teleportPhysics)
+void UTweenComponent::InitTween(ETweenMode mode, AActor * actor, FTransform tOrigin, FTransform tTarget, float targetTime, bool worldspace, bool loop, bool teleportPhysics)
 {
 	this->type = ETweenType::TRANSFORM;
-	BaseInitTween(mode, actor, tdelegate, targetTime, worldspace, loop, teleportPhysics);
+	BaseInitTween(mode, actor, targetTime, worldspace, loop, teleportPhysics);
 
 	this->tOrigin = tOrigin;
 	this->tTarget = tTarget;
 }
 
-void UTweenComponent::BaseInitTween(ETweenMode mode, AActor * actor, FTweenDynamicDelegate tdelegate, float targetTime, bool worldspace, bool loop, bool teleportPhysics)
+void UTweenComponent::Destroy()
+{
+	this->UnregisterComponent();
+	this->DestroyComponent();
+}
+
+void UTweenComponent::BaseInitTween(ETweenMode mode, AActor * actor, float targetTime, bool worldspace, bool loop, bool teleportPhysics)
 {
 	this->mode = mode;
 	this->actor = actor;
-	this->OnTweenCompleted = tdelegate;
 	this->targetTime = targetTime;
 	this->loop = loop;
 	this->worldspace = worldspace;
