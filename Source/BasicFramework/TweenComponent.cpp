@@ -47,7 +47,6 @@ void UTweenComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 		{
 			TickTween(1.0f);
 			isCompleted = true;
-			Destroy();
 		}
 	}
 }

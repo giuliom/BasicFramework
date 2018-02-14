@@ -32,7 +32,9 @@ public:
 
 	virtual void UpdateOperation(FLatentResponse& Response) override
 	{
-		Response.FinishAndTriggerIf(tween != nullptr, ExecutionFunction, OutputLink, CallbackTarget);
+		bool completed = tween->IsTweenCompleted();
+		if (completed) tween->Destroy();
+		Response.FinishAndTriggerIf(completed, ExecutionFunction, OutputLink, CallbackTarget);
 	}
 
 };
