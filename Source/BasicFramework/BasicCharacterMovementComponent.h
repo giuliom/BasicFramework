@@ -23,6 +23,11 @@ class BASICFRAMEWORK_API UBasicCharacterMovementComponent : public UCharacterMov
 {
 	GENERATED_BODY()
 
+public:
+
+	UPROPERTY(BlueprintReadWrite, Category = "Character Movement: Ladder")
+	float ladderSpeed = 1.0f;
+
 protected:
 
 	void OnMovementModeChanged(EMovementMode prevMovement, uint8 prevCustomMovement) override;

@@ -30,6 +30,8 @@ void UBasicCharacterMovementComponent::PhysCustomLadder(float deltaTime, int32 I
 {
 	//TODO placeholder
 	PhysWalking(deltaTime, Iterations);
+
+	Velocity = FVector(0.0f, 0.0f, 1.0f) * ladderSpeed * deltaTime;
 }
 
 void UBasicCharacterMovementComponent::SetMovementMode(EMovementMode NewMovementMode, uint8 NewCustomMode)
