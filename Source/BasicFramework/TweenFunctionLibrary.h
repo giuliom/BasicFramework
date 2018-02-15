@@ -33,7 +33,7 @@ public:
 	virtual void UpdateOperation(FLatentResponse& Response) override
 	{
 		bool completed = tween->IsTweenCompleted();
-		if (completed) tween->Destroy();
+		if (completed) tween->DestroyComponent();
 		Response.FinishAndTriggerIf(completed, ExecutionFunction, OutputLink, CallbackTarget);
 	}
 

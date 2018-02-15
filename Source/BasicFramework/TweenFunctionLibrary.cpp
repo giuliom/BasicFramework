@@ -58,7 +58,8 @@ UTweenComponent * UTweenFunctionLibrary::TweenLocation(AActor * actor, FVector v
 
 	if (!CreateLatentAction(tween, worldContextObject, latentInfo))
 	{
-		tween->Destroy();
+		tween->DestroyComponent();
+		tween = nullptr;
 	}
 
 	return tween;
@@ -73,7 +74,8 @@ UTweenComponent * UTweenFunctionLibrary::TweenRotation(AActor * actor, FRotator 
 
 	if (!CreateLatentAction(tween, worldContextObject, latentInfo))
 	{
-		tween->Destroy();
+		tween->DestroyComponent();
+		tween = nullptr;
 	}
 
 	return tween;
@@ -88,7 +90,8 @@ UTweenComponent * UTweenFunctionLibrary::TweenTransform(AActor * actor, FTransfo
 
 	if (!CreateLatentAction(tween, worldContextObject, latentInfo))
 	{
-		tween->Destroy();
+		tween->DestroyComponent();
+		tween = nullptr;
 	}
 
 	return tween;

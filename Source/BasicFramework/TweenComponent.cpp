@@ -94,11 +94,6 @@ void UTweenComponent::InitTween(ETweenMode mode, AActor * actor, FTransform tOri
 	this->tTarget = tTarget;
 }
 
-void UTweenComponent::Destroy()
-{
-	this->UnregisterComponent();
-	this->DestroyComponent();
-}
 
 void UTweenComponent::BaseInitTween(ETweenMode mode, AActor * actor, float targetTime, bool worldspace, bool loop, bool teleportPhysics)
 {

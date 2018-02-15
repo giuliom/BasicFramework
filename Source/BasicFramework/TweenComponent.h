@@ -97,8 +97,6 @@ public:
 
 	bool IsTweenCompleted() { return isCompleted; }
 
-	void Destroy();
-
 
 protected:
 
