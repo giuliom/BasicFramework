@@ -7,8 +7,8 @@ void UBasicGameInstance::Init()
 {
 	UGameInstance::Init();
 
-	FCoreUObjectDelegates::PreLoadMap.AddUObject(this, &UBasicGameInstance::ShowLoadingScreen);
-	FCoreUObjectDelegates::PostLoadMap.AddUObject(this, &UBasicGameInstance::HideLoadingScreen);
+	//FCoreUObjectDelegates::PreLoadMap.AddUObject(this, &UBasicGameInstance::ShowLoadingScreen);
+	//FCoreUObjectDelegates::PostLoadMap.AddUObject(this, &UBasicGameInstance::HideLoadingScreen);
 }
 
 void UBasicGameInstance::ShowLoadingScreen(const FString & levelName)

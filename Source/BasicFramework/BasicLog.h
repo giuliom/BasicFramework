@@ -15,16 +15,16 @@
 */
 
 //General Log
-DECLARE_LOG_CATEGORY_EXTERN(Default, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(DefaultLog, Log, All);
 
 //Logging during startup
-DECLARE_LOG_CATEGORY_EXTERN(Startup, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(StartupLog, Log, All);
 
 //Logging for AI 
-DECLARE_LOG_CATEGORY_EXTERN(AI, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(AILog, Log, All);
 
 //Logging for services
-DECLARE_LOG_CATEGORY_EXTERN(Services, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(ServicesLog, Log, All);
 
 
 UENUM(BlueprintType)		//"BlueprintType" is essential to include
