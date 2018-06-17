@@ -30,7 +30,7 @@ void ABasicCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	firstPersonCameraComponent->AttachTo(GetMesh(), cameraSocket, EAttachLocation::SnapToTarget);
+	firstPersonCameraComponent->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, cameraSocket);
 	firstPersonCameraComponent->RelativeLocation = FVector(0.0f, 20.0f, 00.0f); // Position the camera
 	firstPersonCameraComponent->RelativeRotation = FRotator(0.0f, 90.0f, 0.0f);
 
@@ -111,10 +111,10 @@ bool ABasicCharacter::Interact(EBasicInteractionType iType)
 
 	if (result != nullptr)
 	{
-		if (result->CanBeExecuted() )
+		if (result->IsExecutionEnabled() )
 		{
 			UActorComponent* component = (UActorComponent*)hit.GetComponent();
-			result->Execute(this, component, iType);
+			result->Execute(this, component, (uint8) iType);
 			return true;
 		}
 	}
@@ -137,14 +137,14 @@ bool ABasicCharacter::HighlightInteractableObject()
 	}
 	else
 	{
-		if (prevHighlightedObj != nullptr)prevHighlightedObj->SetRenderCustomDepth(false);
+		if (prevHighlightedObj != nullptr) prevHighlightedObj->SetRenderCustomDepth(false);
 	}
 
 	if (result != nullptr)
 	{
 		primitive = Cast<UPrimitiveComponent> (hit.Actor->GetComponentByClass(UPrimitiveComponent::StaticClass()));
 		
-		if (result->CanBeExecuted() && primitive != nullptr)
+		if (result->IsExecutionEnabled() && primitive != nullptr)
 		{
 			if (OnHighlightEvent.IsBound())
 			{
