@@ -101,7 +101,7 @@ void ABasicCharacter::SetSwimming(bool enabled)
 
 //----------------------- GAMEPLAY METHODS -----------------------
 
-bool ABasicCharacter::Interact(EBasicInteractionType iType)
+bool ABasicCharacter::Interact(UBasicInteractionType* iType)
 {
 	
 	FHitResult hit;

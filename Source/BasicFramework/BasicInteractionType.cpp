@@ -2,3 +2,7 @@
 
 #include "BasicInteractionType.h"
 
+UBasicInteractionType::UBasicInteractionType(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
+}

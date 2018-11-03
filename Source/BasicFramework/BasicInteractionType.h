@@ -8,12 +8,14 @@
 /**
  * 
  */
-UENUM(BlueprintType)		//"BlueprintType" is essential to include
-enum class EBasicInteractionType : uint8
+UCLASS(Blueprintable)
+class UBasicInteractionType : public UObject
 {
-	DEFAULT 	UMETA(DisplayName = "Default"),
-	SECONDARY	UMETA(DisplayName = "Secondary"),
-	THIRD		UMETA(DisplayName = "Third"),
-	FOURTH		UMETA(DisplayName = "Fourth")
-};
+	GENERATED_BODY()
+ 
+public:
+	UPROPERTY(EditAnywhere)
+	FString Name;
 
+	UBasicInteractionType(const FObjectInitializer& ObjectInitializer);
+};

@@ -22,7 +22,7 @@
 *
 */
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FInteractionEvent, UObject*, caller, UActorComponent*, component, uint8, interactionType);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FInteractionEvent, UObject*, caller, UActorComponent*, component, UBasicInteractionType*, interactionType);
 
 
 
@@ -42,7 +42,6 @@ protected:
 public:
 	// Sets default values for this component's properties
 	UBasicInteractionComponent();
-
 
 	UPROPERTY(BlueprintReadWrite, BlueprintAssignable, BlueprintCallable, Category = Delegates)
 	FInteractionEvent OnPreExecution;
@@ -66,8 +65,8 @@ public:
 	* @param interactionType represent different types of interaction possible with the object
 	*/
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = Gameplay)
-	void Execute(UObject* caller, UActorComponent* component = nullptr, uint8 interactionType = 0);
-	virtual void Execute_Implementation(UObject* caller, UActorComponent* component = nullptr, uint8 interactionType = 0);
+	void Execute(UObject* caller, UActorComponent* component = nullptr, UBasicInteractionType* interactionType = nullptr);
+	virtual void Execute_Implementation(UObject* caller, UActorComponent* component = nullptr, UBasicInteractionType* interactionType = nullptr);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = Gameplay)
 	void OnFocusBegin(AActor * byActor = nullptr);

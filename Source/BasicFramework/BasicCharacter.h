@@ -150,7 +150,7 @@ public:
 
 	// Used to interacts with objects that implement InteractiveInterface by calling their Execute() method
 	UFUNCTION(BlueprintCallable)
-		virtual bool Interact(EBasicInteractionType iType = EBasicInteractionType::DEFAULT);
+		virtual bool Interact(UBasicInteractionType* iType = nullptr);
 
 	UFUNCTION(BlueprintCallable)
 		virtual bool HighlightInteractableObject();

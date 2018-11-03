@@ -13,7 +13,7 @@ UBasicInteractionComponent::UBasicInteractionComponent()
 }
 
 
-void UBasicInteractionComponent::Execute_Implementation(UObject * caller, UActorComponent* component, uint8 interactionType)
+void UBasicInteractionComponent::Execute_Implementation(UObject * caller, UActorComponent* component, UBasicInteractionType* interactionType)
 {
 	if (!bExecutionEnabled) return;
 	
