@@ -114,7 +114,7 @@ bool ABasicCharacter::Interact(UBasicInteractionType* iType)
 		if (result->IsExecutionEnabled() )
 		{
 			UActorComponent* component = (UActorComponent*)hit.GetComponent();
-			result->Execute(this, component, (uint8) iType);
+			result->Execute(this, component, iType);
 			return true;
 		}
 	}

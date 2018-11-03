@@ -44,13 +44,7 @@ public:
 	UBasicInteractionComponent();
 
 	UPROPERTY(BlueprintReadWrite, BlueprintAssignable, BlueprintCallable, Category = Delegates)
-	FInteractionEvent OnPreExecution;
-
-	UPROPERTY(BlueprintReadWrite, BlueprintAssignable, BlueprintCallable, Category = Delegates)
 	FInteractionEvent OnExecution;
-
-	UPROPERTY(BlueprintReadWrite, BlueprintAssignable, BlueprintCallable, Category = Delegates)
-	FInteractionEvent OnPostExecution;
 
 	//Delegate fired when Execute() is completed by PostExecutionSetup()
 	UPROPERTY(BlueprintReadWrite, BlueprintAssignable, BlueprintCallable, Category = Delegates)
