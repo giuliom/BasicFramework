@@ -37,7 +37,6 @@ protected:
 
 public:
 
-	UFUNCTION(BlueprintCallable)
 	void SetMovementMode(EMovementMode NewMovementMode, uint8 NewCustomMode) override;
 
 	UFUNCTION(BlueprintCallable)
