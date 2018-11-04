@@ -163,13 +163,13 @@ bool ABasicCharacter::HighlightInteractableObject()
 	return bFound;
 }
 
-void ABasicCharacter::OnPossess_Internal(int32 index)
+void ABasicCharacter::OnPossess_Implementation(int32 index)
 {
 	playerIndex = index;
 	
 }
 
-void ABasicCharacter::OnUnpossess_Internal()
+void ABasicCharacter::OnUnpossess_Implementation()
 {
 	playerIndex = -1;
 }

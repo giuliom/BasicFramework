@@ -158,10 +158,10 @@ public:
 
 
 	// Called by BasicPlayerController after possessing the character. BlueprintNativeEvent
-		virtual void OnPossess_Internal(int32 index) override;
+		virtual void OnPossess_Implementation(int32 index) override;
 
 	// Called by BasicPlayerController before possessing another character. BlueprintNativeEvent
-		virtual void OnUnpossess_Internal() override;
+		virtual void OnUnpossess_Implementation() override;
 
 		void SetUpPlayerControllerInput_Implementation(class ABasicPlayerController* controller) override;
 

@@ -35,13 +35,11 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = Input)
 		void OnPossess(int32 index);
-	void OnPossess_Implementation(int32 index) { OnPossess_Internal(index); }
-	virtual void OnPossess_Internal(int32 index) { playerIndex = index; }
+	virtual void OnPossess_Implementation(int32 index) { playerIndex = index; }
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = Input)
 		void OnUnpossess();
-	void OnUnpossess_Implementation() { OnUnpossess_Internal(); }
-	virtual void OnUnpossess_Internal() {}
+	virtual void OnUnpossess_Implementation() {  }
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = Input)
 		void SetUpPlayerControllerInput(class ABasicPlayerController* controller);
@@ -51,23 +49,19 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = Pawn)
 		bool IsMovementEnabled() const;
-	bool IsMovementEnabled_Implementation() const { return IsMovementEnabled_Internal(); }
-	virtual bool IsMovementEnabled_Internal() const { return bMovementEnabled; }
+	virtual bool IsMovementEnabled_Implementation() const { return bMovementEnabled; }
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = Pawn)
 		void SetMovementEnabled(bool val);
-	void SetMovementEnabled_Implementation(bool val) { SetMovementEnabled_Internal(val); }
-	virtual void SetMovementEnabled_Internal(bool val) { bMovementEnabled = val; }
+	virtual void SetMovementEnabled_Implementation(bool val) { bMovementEnabled = val; }
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = Pawn)
 		bool IsRotationEnabled() const;
-	bool IsRotationEnabled_Implementation() const { return IsRotationEnabled_Internal(); }
-	virtual bool IsRotationEnabled_Internal() const { return bRotationEnabled; }
+	virtual bool IsRotationEnabled_Implementation() const { return bRotationEnabled; }
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = Pawn)
 		void SetRotationEnabled(bool val);
-	void SetRotationEnabled_Implementation(bool val) { SetRotationEnabled_Internal(val); }
-	virtual void SetRotationEnabled_Internal(bool val) { bRotationEnabled = val; }
+	virtual void SetRotationEnabled_Implementation(bool val) { bRotationEnabled = val; }
 
 	//UFUNCTION(BlueprintCallable)
 	FGameplayTag GetGameplayTag() const { return gameplayTag; }
