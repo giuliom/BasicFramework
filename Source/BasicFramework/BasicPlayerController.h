@@ -15,6 +15,10 @@
  * It can possess class DefaultCharacter and derivateed classes.
  * **ALWAYS USE** PossessCharacter() do posses one.
 */
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FInputAction);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInputAxis, float, value);
+
 UCLASS()
 class BASICFRAMEWORK_API ABasicPlayerController : public APlayerController
 {
@@ -53,11 +57,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = Camera)
 		float maxCameraRotationPitch = 89.9f;
 
-
-public:
-
-	
-
 protected:
 
 	// Called when the game starts or when spawned
@@ -65,6 +64,8 @@ protected:
 
 	//Setups input gameplay bindings
 	virtual void SetupInputComponent() override;
+
+	void ResetInputDelegates();
 
 public:
 
@@ -82,11 +83,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Input)
 		virtual void ProcessInputButtonA_Released();
 
+	FInputAction delInputButtonA_Pressed;
+	FInputAction delInputButtonA_Released;
+
 	UFUNCTION(BlueprintCallable, Category = Input)
 		virtual void ProcessInputButtonB();
 
 	UFUNCTION(BlueprintCallable, Category = Input)
 		virtual void ProcessInputButtonB_Released();
+
+	FInputAction delInputButtonB_Pressed;
+	FInputAction delInputButtonB_Released;
 
 	UFUNCTION(BlueprintCallable, Category = Input)
 		virtual void ProcessInputButtonX();
@@ -94,11 +101,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Input)
 		virtual void ProcessInputButtonX_Released();
 
+	FInputAction delInputButtonX_Pressed;
+	FInputAction delInputButtonX_Released;
+
 	UFUNCTION(BlueprintCallable, Category = Input)
 		virtual void ProcessInputButtonY();
 
 	UFUNCTION(BlueprintCallable, Category = Input)
 		virtual void ProcessInputButtonY_Released();
+
+	FInputAction delInputButtonY_Pressed;
+	FInputAction delInputButtonY_Released;
 
 	UFUNCTION(BlueprintCallable, Category = Input)
 		virtual void ProcessInputLeftBumper();
@@ -106,11 +119,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Input)
 		virtual void ProcessInputLeftBumper_Released();
 
+	FInputAction delInputLeftBumper_Pressed;
+	FInputAction delInputLeftBumper_Released;
+
 	UFUNCTION(BlueprintCallable, Category = Input)
 		virtual void ProcessInputRightBumper();
 
 	UFUNCTION(BlueprintCallable, Category = Input)
 		virtual void ProcessInputRightBumper_Released();
+
+	FInputAction delInputRightBumper_Pressed;
+	FInputAction delInputRightBumper_Released;
 
 	UFUNCTION(BlueprintCallable, Category = Input)
 		virtual void ProcessInputStart();
@@ -118,37 +137,59 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Input)
 		virtual void ProcessInputStart_Released();
 
+	FInputAction delInputStart_Pressed;
+	FInputAction delInputStart_Released;
+
 	UFUNCTION(BlueprintCallable, Category = Input)
 		virtual void ProcessInputBack();
 
 	UFUNCTION(BlueprintCallable, Category = Input)
 		virtual void ProcessInputBack_Released();
 
+	FInputAction delInputBack_Pressed;
+	FInputAction delInputBack_Released;
+
 	UFUNCTION(BlueprintCallable, Category = Input)
 		virtual void ProcessInputLeftTrigger(float Val);
+
+	FInputAxis delInputLeftTrigger;
 
 	UFUNCTION(BlueprintCallable, Category = Input)
 		virtual void ProcessInputRightTrigger(float Val);
 
+	FInputAxis delInputRightTrigger;
+
 	UFUNCTION(BlueprintCallable, Category = Input)
 		virtual void ProcessInputForward(float Val);
+
+	FInputAxis delInputForward;
 
 	UFUNCTION(BlueprintCallable, Category = Input)
 		virtual void ProcessInputRight(float Val);
 
-	/**
-	* @param Rate	This is a normalized rate, 1.0 means full rate
-	*/
-	virtual void ProcessInputTurnAtRate(float Rate);
+	FInputAxis delInputRight;
 
 	/**
 	* @param Rate	This is a normalized rate, 1.0 means full rate
 	*/
-	virtual void ProcessInputLookUpAtRate(float Rate);
+	virtual void ProcessInputTurnAtRate(float rate);
+
+	FInputAxis delInputTurnAtRate;
+
+	/**
+	* @param Rate	This is a normalized rate, 1.0 means full rate
+	*/
+	virtual void ProcessInputLookUpAtRate(float rate);
+
+	FInputAxis delInputLookUpAtRate;
 
 	virtual void ProcessInputRotateRight(float val);
 
+	FInputAxis delInputRotateRight;
+
 	virtual void ProcessInputRotateUp(float val);
+
+	FInputAxis delInputRotateUp;
 
 
 };

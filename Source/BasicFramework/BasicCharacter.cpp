@@ -103,7 +103,6 @@ void ABasicCharacter::SetSwimming(bool enabled)
 
 bool ABasicCharacter::Interact(UBasicInteractionType* iType)
 {
-	
 	FHitResult hit;
 	UBasicInteractionComponent* result = Cast<UBasicInteractionComponent>(UBasicUtils::LineTraceComponent
 				(hit, this, UBasicInteractionComponent::StaticClass(), firstPersonCameraComponent->GetComponentLocation(), firstPersonCameraComponent->GetComponentLocation() + (firstPersonCameraComponent->GetForwardVector() * defaultRaycastDistance),
@@ -167,11 +166,38 @@ bool ABasicCharacter::HighlightInteractableObject()
 void ABasicCharacter::OnPossess_Internal(int32 index)
 {
 	playerIndex = index;
+	
 }
 
 void ABasicCharacter::OnUnpossess_Internal()
 {
 	playerIndex = -1;
+}
+
+void ABasicCharacter::SetUpPlayerControllerInput_Implementation(ABasicPlayerController * controller)
+{
+	check(controller);
+
+	controller->delInputForward.AddDynamic(this, &ABasicCharacter::MoveForward);
+	controller->delInputRight.AddDynamic(this, &ABasicCharacter::MoveRight);
+
+	controller->delInputButtonA_Released.AddDynamic(this, &ABasicCharacter::InputInteract);
+
+	controller->delInputButtonB_Released.AddDynamic(this, &ABasicCharacter::CrouchMode);
+
+	controller->delInputButtonX_Pressed.AddDynamic(this, &ABasicCharacter::Jump);
+	controller->delInputButtonX_Released.AddDynamic(this, &ABasicCharacter::StopJumping);
+
+	controller->delInputLeftBumper_Pressed.AddDynamic(this, &ABasicCharacter::StartRunning);
+	controller->delInputLeftBumper_Released.AddDynamic(this, &ABasicCharacter::StopRunning);
+
+	controller->delInputStart_Released.AddDynamic(this, &ABasicCharacter::PauseGame);
+
+	controller->delInputRotateRight.AddDynamic(this, &ABasicCharacter::RotateRight);
+	controller->delInputRotateUp.AddDynamic(this, &ABasicCharacter::RotateUp);
+
+	controller->delInputTurnAtRate.AddDynamic(this, &ABasicCharacter::TurnAtRate);
+	controller->delInputLookUpAtRate.AddDynamic(this, &ABasicCharacter::LookUpAtRate);
 }
 
 
@@ -195,9 +221,7 @@ void ABasicCharacter::StopJumping()
 }
 
 
-//----------------------- INPUT PROCESSING METHODS -----------------------
-
-void ABasicCharacter::ProcessInputForward_Internal(float val)
+void ABasicCharacter::MoveForward(float val)
 {
 	if (val != 0.0f && bMovementEnabled)
 	{
@@ -206,8 +230,7 @@ void ABasicCharacter::ProcessInputForward_Internal(float val)
 	}
 }
 
-
-void ABasicCharacter::ProcessInputRight_Internal(float val)
+void ABasicCharacter::MoveRight(float val)
 {
 	if (val != 0.0f && bMovementEnabled)
 	{
@@ -216,105 +239,29 @@ void ABasicCharacter::ProcessInputRight_Internal(float val)
 	}
 }
 
-
-void ABasicCharacter::ProcessInputButtonA_Internal()
-{
-
-}
-
-void ABasicCharacter::ProcessInputButtonA_Released_Internal()
-{
-	Interact();
-}
-
-
-void ABasicCharacter::ProcessInputButtonB_Internal()
-{
-
-}
-
-
-void ABasicCharacter::ProcessInputButtonB_Released_Internal()
+void ABasicCharacter::CrouchMode()
 {
 	bool shouldcrouch = !IsCrouching();
 	SetCrouching(shouldcrouch);
 }
 
-
-void ABasicCharacter::ProcessInputButtonX_Internal()
+void ABasicCharacter::InputInteract()
 {
-	Jump();
+	Interact();
 }
 
-
-void ABasicCharacter::ProcessInputButtonX_Released_Internal()
-{
-	StopJumping();
-}
-
-
-void ABasicCharacter::ProcessInputButtonY_Internal()
-{
-
-}
-
-
-void ABasicCharacter::ProcessInputButtonY_Released_Internal()
-{
-
-}
-
-
-void ABasicCharacter::ProcessInputLeftBumper_Internal()
+void ABasicCharacter::StartRunning()
 {
 	SetRunning(true);
 }
 
-
-void ABasicCharacter::ProcessInputLeftBumper_Released_Internal()
+void ABasicCharacter::StopRunning()
 {
 	SetRunning(false);
 }
 
 
-void ABasicCharacter::ProcessInputRightBumper_Internal()
-{
-	
-}
-
-
-void ABasicCharacter::ProcessInputRightBumper_Released_Internal()
-{
-	
-}
-
-void ABasicCharacter::ProcessInputStart_Internal()
-{
-}
-
-void ABasicCharacter::ProcessInputStart_Released_Internal()
-{
-	PauseGame();
-}
-
-void ABasicCharacter::ProcessInputBack_Internal()
-{
-}
-
-void ABasicCharacter::ProcessInputBack_Released_Internal()
-{
-}
-
-void ABasicCharacter::ProcessInputLeftTrigger_Internal(float val)
-{
-}
-
-void ABasicCharacter::ProcessInputRightTrigger_Internal(float val)
-{
-}
-
-
-void ABasicCharacter::ProcessInputRotateRight_Internal(float val) //Yaw
+void ABasicCharacter::RotateRight(float val) //Yaw
 {
 	if (!bRotationEnabled) return;
 
@@ -322,7 +269,7 @@ void ABasicCharacter::ProcessInputRotateRight_Internal(float val) //Yaw
 }
 
 
-void ABasicCharacter::ProcessInputRotateUp_Internal(float val) //Pitch
+void ABasicCharacter::RotateUp(float val) //Pitch
 {
 	if (!bRotationEnabled) return;
 
@@ -330,21 +277,21 @@ void ABasicCharacter::ProcessInputRotateUp_Internal(float val) //Pitch
 }
 
 
-void ABasicCharacter::ProcessInputTurnAtRate_Internal(float val)
+void ABasicCharacter::TurnAtRate(float val)
 {
 	if (!bRotationEnabled) return;
 
 	// calculate delta for this frame from the rate information
-	ProcessInputRotateRight_Internal(val * BaseTurnRate * turnRateMultiplier * GetWorld()->GetDeltaSeconds());
+	RotateRight(val * BaseTurnRate * turnRateMultiplier * GetWorld()->GetDeltaSeconds());
 }
 
 
-void ABasicCharacter::ProcessInputLookUpAtRate_Internal(float val)
+void ABasicCharacter::LookUpAtRate(float val)
 {
 	if (!bRotationEnabled) return;
 
 	// calculate delta for this frame from the rate information
-	ProcessInputRotateUp_Internal(val * BaseLookUpRate * lookUpRateMultiplier * GetWorld()->GetDeltaSeconds());
+	RotateUp(val * BaseLookUpRate * lookUpRateMultiplier * GetWorld()->GetDeltaSeconds());
 }
 
 //#pragma optimize("", on)

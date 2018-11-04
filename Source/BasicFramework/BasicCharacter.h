@@ -79,6 +79,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UFUNCTION(BlueprintCallable)
 	virtual void PauseGame();
 
 public:	
@@ -162,57 +163,50 @@ public:
 	// Called by BasicPlayerController before possessing another character. BlueprintNativeEvent
 		virtual void OnUnpossess_Internal() override;
 
+		void SetUpPlayerControllerInput_Implementation(class ABasicPlayerController* controller) override;
+
 
 	//----------------------- MOVEMENT METHODS -----------------------
 
 	virtual void Jump() override;
 
 	virtual void StopJumping() override;
+
 	
+	UFUNCTION(BlueprintCallable)
+	virtual void MoveForward(float val);
 
-	//----------------------- INPUT PROCESSING METHODS -----------------------
-	
-	virtual void ProcessInputForward_Internal(float val) override;
-	virtual void ProcessInputRight_Internal(float val) override;
+	UFUNCTION(BlueprintCallable)
+	virtual void MoveRight(float val);
 
-	virtual void ProcessInputButtonA_Internal() override;
-	virtual void ProcessInputButtonA_Released_Internal() override;
+	UFUNCTION(BlueprintCallable)
+	virtual void CrouchMode();
 
-	virtual void ProcessInputButtonB_Internal() override;
-	virtual void ProcessInputButtonB_Released_Internal() override;
+	UFUNCTION(BlueprintCallable)
+	virtual void InputInteract();
 
-	virtual void ProcessInputButtonX_Internal() override;
-	virtual void ProcessInputButtonX_Released_Internal() override;
+	UFUNCTION(BlueprintCallable)
+	virtual void StartRunning();
 
-	virtual void ProcessInputButtonY_Internal() override;
-	virtual void ProcessInputButtonY_Released_Internal() override;
+	UFUNCTION(BlueprintCallable)
+	virtual void StopRunning();
 
-	virtual void ProcessInputLeftBumper_Internal() override;
-	virtual void ProcessInputLeftBumper_Released_Internal() override;
+	UFUNCTION(BlueprintCallable)
+	virtual void RotateRight(float val); //Yaw
 
-	virtual void ProcessInputRightBumper_Internal() override;
-	virtual void ProcessInputRightBumper_Released_Internal() override;
-
-	virtual void ProcessInputStart_Internal() override;
-	virtual void ProcessInputStart_Released_Internal() override;
-
-	virtual void ProcessInputBack_Internal() override;
-	virtual void ProcessInputBack_Released_Internal() override;
-
-	virtual void ProcessInputLeftTrigger_Internal(float val) override;
-	virtual void ProcessInputRightTrigger_Internal(float val) override;
-
-	virtual void ProcessInputRotateRight_Internal(float val) override; //Yaw
-	virtual void ProcessInputRotateUp_Internal(float val) override; //Pitch
+	UFUNCTION(BlueprintCallable)
+	virtual void RotateUp(float val); //Pitch
 
 	/**
 	* @param Rate	This is a normalized rate, 1.0 means full rate
 	*/
-	virtual void ProcessInputTurnAtRate_Internal(float val) override;
+	UFUNCTION(BlueprintCallable)
+	virtual void TurnAtRate(float val);
 
 	/**
 	* @param Rate	This is a normalized rate, 1.0 means full rate
 	*/
-	virtual void ProcessInputLookUpAtRate_Internal(float val) override;
+	UFUNCTION(BlueprintCallable)
+	virtual void LookUpAtRate(float val);
 
 };

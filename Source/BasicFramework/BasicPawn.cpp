@@ -37,13 +37,4 @@ void ABasicPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 
 }
 
-//----------------------- INPUT PROCESSING METHODS -----------------------
-
-void ABasicPawn::ProcessInputForward_Internal(float val)
-{
-}
-
-void ABasicPawn::ProcessInputRight_Internal(float val)
-{
-}
 

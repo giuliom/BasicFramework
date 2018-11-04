@@ -39,10 +39,5 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 
-	//----------------------- INPUT PROCESSING METHODS -----------------------
-
-	virtual void ProcessInputForward_Internal(float val) override;
-	virtual void ProcessInputRight_Internal(float val) override;
-
 	
 };

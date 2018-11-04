@@ -12,6 +12,8 @@ void ABasicPlayerController::BeginPlay()
 {
 	characterPawnInterface = Cast<IBasicPawnInterface>(GetPawn());
 	cameraManager = (ABasicPlayerCameraManager*)PlayerCameraManager;
+
+	PossessBasicPawn(GetPawn());
 }
 
 
@@ -24,43 +26,73 @@ void ABasicPlayerController::SetupInputComponent()
 
 	InputComponent->bBlockInput = false;
 
-	InputComponent->BindAction(*buttonA, IE_Pressed, this, &ABasicPlayerController::ProcessInputButtonA);
-	InputComponent->BindAction(*buttonA, IE_Released, this, &ABasicPlayerController::ProcessInputButtonA_Released);
+	InputComponent->BindAction(*buttonA, IE_Pressed, this, &ABasicPlayerController::ProcessInputButtonA).bConsumeInput = false;
+	InputComponent->BindAction(*buttonA, IE_Released, this, &ABasicPlayerController::ProcessInputButtonA_Released).bConsumeInput = false;
 
-	InputComponent->BindAction(*buttonB, IE_Pressed, this, &ABasicPlayerController::ProcessInputButtonB);
-	InputComponent->BindAction(*buttonB, IE_Released, this, &ABasicPlayerController::ProcessInputButtonB_Released);
+	InputComponent->BindAction(*buttonB, IE_Pressed, this, &ABasicPlayerController::ProcessInputButtonB).bConsumeInput = false;
+	InputComponent->BindAction(*buttonB, IE_Released, this, &ABasicPlayerController::ProcessInputButtonB_Released).bConsumeInput = false;
 
-	InputComponent->BindAction(*buttonX, IE_Pressed, this, &ABasicPlayerController::ProcessInputButtonX);
-	InputComponent->BindAction(*buttonX, IE_Released, this, &ABasicPlayerController::ProcessInputButtonX_Released);
+	InputComponent->BindAction(*buttonX, IE_Pressed, this, &ABasicPlayerController::ProcessInputButtonX).bConsumeInput = false;
+	InputComponent->BindAction(*buttonX, IE_Released, this, &ABasicPlayerController::ProcessInputButtonX_Released).bConsumeInput = false;
 
-	InputComponent->BindAction(*buttonY, IE_Pressed, this, &ABasicPlayerController::ProcessInputButtonY);
-	InputComponent->BindAction(*buttonY, IE_Released, this, &ABasicPlayerController::ProcessInputButtonY_Released);
+	InputComponent->BindAction(*buttonY, IE_Pressed, this, &ABasicPlayerController::ProcessInputButtonY).bConsumeInput = false;
+	InputComponent->BindAction(*buttonY, IE_Released, this, &ABasicPlayerController::ProcessInputButtonY_Released).bConsumeInput = false;
 
-	InputComponent->BindAction(*buttonLB, IE_Pressed, this, &ABasicPlayerController::ProcessInputLeftBumper);
-	InputComponent->BindAction(*buttonLB, IE_Released, this, &ABasicPlayerController::ProcessInputLeftBumper_Released);
+	InputComponent->BindAction(*buttonLB, IE_Pressed, this, &ABasicPlayerController::ProcessInputLeftBumper).bConsumeInput = false;
+	InputComponent->BindAction(*buttonLB, IE_Released, this, &ABasicPlayerController::ProcessInputLeftBumper_Released).bConsumeInput = false;
 
-	InputComponent->BindAction(*buttonRB, IE_Pressed, this, &ABasicPlayerController::ProcessInputRightBumper);
-	InputComponent->BindAction(*buttonRB, IE_Released, this, &ABasicPlayerController::ProcessInputRightBumper_Released);
+	InputComponent->BindAction(*buttonRB, IE_Pressed, this, &ABasicPlayerController::ProcessInputRightBumper).bConsumeInput = false;
+	InputComponent->BindAction(*buttonRB, IE_Released, this, &ABasicPlayerController::ProcessInputRightBumper_Released).bConsumeInput = false;
 
-	InputComponent->BindAction(*buttonStart, IE_Pressed, this, &ABasicPlayerController::ProcessInputStart);
-	InputComponent->BindAction(*buttonStart, IE_Released, this, &ABasicPlayerController::ProcessInputStart_Released).bExecuteWhenPaused = true; //Because it's the pause button
+	InputComponent->BindAction(*buttonStart, IE_Pressed, this, &ABasicPlayerController::ProcessInputStart).bConsumeInput = false;
+	FInputActionBinding pause = InputComponent->BindAction(*buttonStart, IE_Released, this, &ABasicPlayerController::ProcessInputStart_Released);
+	pause.bConsumeInput = false;
+	pause.bExecuteWhenPaused = true; //Because it's the pause button
 
-	InputComponent->BindAction(*buttonBack, IE_Pressed, this, &ABasicPlayerController::ProcessInputBack);
-	InputComponent->BindAction(*buttonBack, IE_Released, this, &ABasicPlayerController::ProcessInputBack_Released);
+	InputComponent->BindAction(*buttonBack, IE_Pressed, this, &ABasicPlayerController::ProcessInputBack).bConsumeInput = false;
+	InputComponent->BindAction(*buttonBack, IE_Released, this, &ABasicPlayerController::ProcessInputBack_Released).bConsumeInput = false;
 
-	InputComponent->BindAxis("MoveForward", this, &ABasicPlayerController::ProcessInputForward);
-	InputComponent->BindAxis("MoveRight", this, &ABasicPlayerController::ProcessInputRight);
+	InputComponent->BindAxis("MoveForward", this, &ABasicPlayerController::ProcessInputForward).bConsumeInput = false;
+	InputComponent->BindAxis("MoveRight", this, &ABasicPlayerController::ProcessInputRight).bConsumeInput = false;
 
 	// "turn" deals with absolute deltas, such as mouse devices.
 	// "turnrate" deal with rates of change, such as analog joysticks.
-	InputComponent->BindAxis("Turn", this, &ABasicPlayerController::ProcessInputRotateRight);
-	InputComponent->BindAxis("TurnRate", this, &ABasicPlayerController::ProcessInputTurnAtRate);
-	InputComponent->BindAxis("LookUp", this, &ABasicPlayerController::ProcessInputRotateUp);
-	InputComponent->BindAxis("LookUpRate", this, &ABasicPlayerController::ProcessInputLookUpAtRate);
+	InputComponent->BindAxis("Turn", this, &ABasicPlayerController::ProcessInputRotateRight).bConsumeInput = false;
+	InputComponent->BindAxis("TurnRate", this, &ABasicPlayerController::ProcessInputTurnAtRate).bConsumeInput = false;
+	InputComponent->BindAxis("LookUp", this, &ABasicPlayerController::ProcessInputRotateUp).bConsumeInput = false;
+	InputComponent->BindAxis("LookUpRate", this, &ABasicPlayerController::ProcessInputLookUpAtRate).bConsumeInput = false;
 
-	InputComponent->BindAxis("LeftTrigger", this, &ABasicPlayerController::ProcessInputLeftTrigger);
-	InputComponent->BindAxis("RightTrigger", this, &ABasicPlayerController::ProcessInputRightTrigger);
+	InputComponent->BindAxis("LeftTrigger", this, &ABasicPlayerController::ProcessInputLeftTrigger).bConsumeInput = false;
+	InputComponent->BindAxis("RightTrigger", this, &ABasicPlayerController::ProcessInputRightTrigger).bConsumeInput = false;
 
+}
+
+void ABasicPlayerController::ResetInputDelegates()
+{
+	delInputButtonA_Pressed.Clear();
+	delInputButtonA_Released.Clear();
+	delInputButtonB_Pressed.Clear();
+	delInputButtonB_Released.Clear();
+	delInputButtonX_Pressed.Clear();
+	delInputButtonX_Released.Clear();
+	delInputButtonY_Pressed.Clear();
+	delInputButtonY_Released.Clear();
+	delInputLeftBumper_Pressed.Clear();
+	delInputLeftBumper_Released.Clear();
+	delInputRightBumper_Pressed.Clear();
+	delInputRightBumper_Released.Clear();
+	delInputStart_Pressed.Clear();
+	delInputStart_Released.Clear();
+	delInputBack_Pressed.Clear();
+	delInputBack_Released.Clear();
+	delInputLeftTrigger.Clear();
+	delInputRightTrigger.Clear();
+	delInputForward.Clear();
+	delInputRight.Clear();
+	delInputTurnAtRate.Clear();
+	delInputLookUpAtRate.Clear();
+	delInputRotateRight.Clear();
+	delInputRotateUp.Clear();
 }
 
 
@@ -76,6 +108,8 @@ void ABasicPlayerController::PossessBasicPawn(APawn* pCharacter)
 
 	characterPawnInterface = interf;
 	IBasicPawnInterface::Execute_OnPossess(interf->_getUObject(), GetInputIndex());
+	ResetInputDelegates();
+	IBasicPawnInterface::Execute_SetUpPlayerControllerInput(interf->_getUObject(), this);
 }
 
 
@@ -83,231 +117,141 @@ void ABasicPlayerController::PossessBasicPawn(APawn* pCharacter)
 
 void ABasicPlayerController::ProcessInputButtonA()
 {
-
-	if (characterPawnInterface != nullptr)
-	{
-		IBasicPawnInterface::Execute_ProcessInputButtonA(characterPawnInterface->_getUObject());
-	}
+	if (delInputButtonA_Pressed.IsBound()) delInputButtonA_Pressed.Broadcast();
 }
 
 
 void ABasicPlayerController::ProcessInputButtonA_Released()
 {
-
-	if (characterPawnInterface != nullptr)
-	{
-		IBasicPawnInterface::Execute_ProcessInputButtonA_Released(characterPawnInterface->_getUObject());
-	}
+	if (delInputButtonA_Released.IsBound()) delInputButtonA_Released.Broadcast();
 }
 
 
 void ABasicPlayerController::ProcessInputButtonB()
 {
-
-	if (characterPawnInterface != nullptr)
-	{
-		IBasicPawnInterface::Execute_ProcessInputButtonB(characterPawnInterface->_getUObject());
-	}
+	if (delInputButtonB_Pressed.IsBound()) delInputButtonB_Pressed.Broadcast();
 }
 
 
 void ABasicPlayerController::ProcessInputButtonB_Released()
 {
-
-	if (characterPawnInterface != nullptr)
-	{
-		IBasicPawnInterface::Execute_ProcessInputButtonB_Released(characterPawnInterface->_getUObject());
-	}
+	if (delInputButtonB_Released.IsBound()) delInputButtonB_Released.Broadcast();
 }
 
 
 void ABasicPlayerController::ProcessInputButtonX()
 {
-
-	if (characterPawnInterface != nullptr)
-	{
-		IBasicPawnInterface::Execute_ProcessInputButtonX(characterPawnInterface->_getUObject());
-	}
+	if (delInputButtonX_Pressed.IsBound()) delInputButtonX_Pressed.Broadcast();
 }
 
 
 void ABasicPlayerController::ProcessInputButtonX_Released()
 {
-
-	if (characterPawnInterface != nullptr)
-	{
-		IBasicPawnInterface::Execute_ProcessInputButtonX_Released(characterPawnInterface->_getUObject());
-	}
+	if (delInputButtonX_Released.IsBound()) delInputButtonX_Released.Broadcast();
 }
 
 
 void ABasicPlayerController::ProcessInputButtonY()
 {
-
-	if (characterPawnInterface != nullptr)
-	{
-		IBasicPawnInterface::Execute_ProcessInputButtonY(characterPawnInterface->_getUObject());
-	}
+	if (delInputButtonY_Pressed.IsBound()) delInputButtonY_Pressed.Broadcast();
 }
 
 
 void ABasicPlayerController::ProcessInputButtonY_Released()
 {
-
-	if (characterPawnInterface != nullptr)
-	{
-		IBasicPawnInterface::Execute_ProcessInputButtonY_Released(characterPawnInterface->_getUObject());
-	}
+	if (delInputButtonY_Released.IsBound()) delInputButtonY_Released.Broadcast();
 }
 
 
 void ABasicPlayerController::ProcessInputLeftBumper()
 {
-
-	if (characterPawnInterface != nullptr)
-	{
-		IBasicPawnInterface::Execute_ProcessInputLeftBumper(characterPawnInterface->_getUObject());
-	}
+	if (delInputLeftBumper_Pressed.IsBound()) delInputLeftBumper_Pressed.Broadcast();
 }
 
 
 void ABasicPlayerController::ProcessInputLeftBumper_Released()
 {
-
-	if (characterPawnInterface != nullptr)
-	{
-		IBasicPawnInterface::Execute_ProcessInputLeftBumper_Released(characterPawnInterface->_getUObject());
-	}
+	if (delInputLeftBumper_Released.IsBound()) delInputLeftBumper_Released.Broadcast();
 }
 
 
 void ABasicPlayerController::ProcessInputRightBumper()
 {
-
-	if (characterPawnInterface != nullptr)
-	{
-		IBasicPawnInterface::Execute_ProcessInputRightBumper(characterPawnInterface->_getUObject());
-	}
+	if (delInputRightBumper_Pressed.IsBound()) delInputRightBumper_Pressed.Broadcast();
 }
 
 
 void ABasicPlayerController::ProcessInputRightBumper_Released()
 {
-
-	if (characterPawnInterface != nullptr)
-	{
-		IBasicPawnInterface::Execute_ProcessInputRightBumper_Released(characterPawnInterface->_getUObject());
-	}
+	if (delInputRightBumper_Released.IsBound()) delInputRightBumper_Released.Broadcast();
 }
 
 
 void ABasicPlayerController::ProcessInputStart()
 {
-	if (characterPawnInterface != nullptr)
-	{
-		IBasicPawnInterface::Execute_ProcessInputStart(characterPawnInterface->_getUObject());
-	}
+	if (delInputStart_Pressed.IsBound()) delInputStart_Pressed.Broadcast();
 }
 
 
 void ABasicPlayerController::ProcessInputStart_Released()
 {
-	if (characterPawnInterface != nullptr)
-	{
-		IBasicPawnInterface::Execute_ProcessInputStart_Released(characterPawnInterface->_getUObject());
-	}
+	if (delInputStart_Released.IsBound()) delInputStart_Released.Broadcast();
 }
 
 
 void ABasicPlayerController::ProcessInputBack()
 {
-	if (characterPawnInterface != nullptr)
-	{
-		IBasicPawnInterface::Execute_ProcessInputBack(characterPawnInterface->_getUObject());
-	}
+	if (delInputBack_Pressed.IsBound()) delInputBack_Pressed.Broadcast();
 }
 
 
 void ABasicPlayerController::ProcessInputBack_Released()
 {
-	if (characterPawnInterface != nullptr)
-	{
-		IBasicPawnInterface::Execute_ProcessInputBack_Released(characterPawnInterface->_getUObject());
-	}
+	if (delInputBack_Released.IsBound()) delInputBack_Released.Broadcast();
 }
 
 void ABasicPlayerController::ProcessInputLeftTrigger(float val)
 {
-	if (characterPawnInterface != nullptr)
-	{
-		IBasicPawnInterface::Execute_ProcessInputLeftTrigger(characterPawnInterface->_getUObject(), val);
-	}
+	if (delInputLeftTrigger.IsBound()) delInputLeftTrigger.Broadcast(val);
 }
 
 void ABasicPlayerController::ProcessInputRightTrigger(float val)
 {
-	if (characterPawnInterface != nullptr)
-	{
-		IBasicPawnInterface::Execute_ProcessInputRightTrigger(characterPawnInterface->_getUObject(), val);
-	}
+	if (delInputRightTrigger.IsBound()) delInputRightTrigger.Broadcast(val);
 }
 
 
 void ABasicPlayerController::ProcessInputForward(float val)
 {
-
-	if (characterPawnInterface != nullptr)
-	{
-		IBasicPawnInterface::Execute_ProcessInputForward(characterPawnInterface->_getUObject() , val);
-	}
+	if (delInputForward.IsBound()) delInputForward.Broadcast(val);
 }
 
 
 void ABasicPlayerController::ProcessInputRight(float val)
 {
-
-	if (characterPawnInterface != nullptr)
-	{
-		IBasicPawnInterface::Execute_ProcessInputRight(characterPawnInterface->_getUObject(), val);
-	}
+	if (delInputRight.IsBound()) delInputRight.Broadcast(val);
 }
 
 
-void ABasicPlayerController::ProcessInputTurnAtRate(float Rate)
+void ABasicPlayerController::ProcessInputTurnAtRate(float rate)
 {
-
-	if (characterPawnInterface != nullptr)
-	{
-		IBasicPawnInterface::Execute_ProcessInputTurnAtRate(characterPawnInterface->_getUObject(), Rate);
-	}
+	if (delInputTurnAtRate.IsBound()) delInputTurnAtRate.Broadcast(rate);
 }
 
 
-void ABasicPlayerController::ProcessInputLookUpAtRate(float Rate)
+void ABasicPlayerController::ProcessInputLookUpAtRate(float rate)
 {
-
-	if (characterPawnInterface != nullptr)
-	{
-		IBasicPawnInterface::Execute_ProcessInputLookUpAtRate(characterPawnInterface->_getUObject(), Rate);
-	}
+	if (delInputLookUpAtRate.IsBound()) delInputLookUpAtRate.Broadcast(rate);
 }
 
 
 void ABasicPlayerController::ProcessInputRotateRight(float val)
 {
-
-	if (characterPawnInterface != nullptr)
-	{
-		IBasicPawnInterface::Execute_ProcessInputRotateRight(characterPawnInterface->_getUObject(), val);
-	}
+	if (delInputRotateRight.IsBound()) delInputRotateRight.Broadcast(val);
 }
 
 
 void ABasicPlayerController::ProcessInputRotateUp(float val)
 {
-
-	if (characterPawnInterface != nullptr)
-	{
-		IBasicPawnInterface::Execute_ProcessInputRotateUp(characterPawnInterface->_getUObject(), val);
-	}
+	if (delInputRotateUp.IsBound()) delInputRotateUp.Broadcast(val);
 }
