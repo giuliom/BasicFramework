@@ -19,6 +19,8 @@ void UBasicInteractionComponent::Execute_Implementation(UObject * caller, UActor
 	
 	if (OnExecution.IsBound()) OnExecution.Broadcast(caller, component, interactionType);
 
+	if (OnInteractionCompleted.IsBound()) OnInteractionCompleted.Broadcast(caller, component, interactionType);
+
 }
 
 void UBasicInteractionComponent::OnFocusBegin_Implementation(AActor * byActor)
