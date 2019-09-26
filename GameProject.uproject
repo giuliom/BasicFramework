@@ -16,7 +16,10 @@
 		{
 			"Name": "GameProject",
 			"Type": "Runtime",
-			"LoadingPhase": "Default"
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"BasicFramework"
+			]
 		}
 	]
 }

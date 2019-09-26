@@ -18,6 +18,7 @@ void UBasicInteractionComponent::Execute_Implementation(UObject * caller, UActor
 	if (!bExecutionEnabled) return;
 	
 	if (OnExecution.IsBound()) OnExecution.Broadcast(caller, component, interactionType);
+	ExecuteInternal(caller, component, interactionType);
 
 	if (OnInteractionCompleted.IsBound()) OnInteractionCompleted.Broadcast(caller, component, interactionType);
 

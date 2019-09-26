@@ -16,10 +16,6 @@
 * Component used to handle interaction with objects
 * Execute(...) is the method that 3 delegates that can be assigned by C++ or blueprints
 *
-* PreExecution(...) sets up the interaction
-* Execution(...) is the method that must implements the interaction
-* PostExecution(...) used to cler the state post interaction
-*
 */
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FInteractionEvent, UObject*, caller, UActorComponent*, component, UBasicInteractionType*, interactionType);
@@ -43,6 +39,7 @@ public:
 	// Sets default values for this component's properties
 	UBasicInteractionComponent();
 
+	//Delegate triggered by Execute()
 	UPROPERTY(BlueprintReadWrite, BlueprintAssignable, BlueprintCallable, Category = Delegates)
 	FInteractionEvent OnExecution;
 
@@ -61,6 +58,9 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = Gameplay)
 	void Execute(UObject* caller, UActorComponent* component = nullptr, UBasicInteractionType* interactionType = nullptr);
 	virtual void Execute_Implementation(UObject* caller, UActorComponent* component = nullptr, UBasicInteractionType* interactionType = nullptr);
+
+	// Triggered by Execute() and necessary to specialize subclasses
+	virtual void ExecuteInternal(UObject* caller, UActorComponent* component = nullptr, UBasicInteractionType* interactionType = nullptr) {}
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = Gameplay)
 	void OnFocusBegin(AActor * byActor = nullptr);

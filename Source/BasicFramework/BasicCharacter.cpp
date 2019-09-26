@@ -104,20 +104,24 @@ void ABasicCharacter::SetSwimming(bool enabled)
 bool ABasicCharacter::Interact(UBasicInteractionType* iType)
 {
 	FHitResult hit;
-	UBasicInteractionComponent* result = Cast<UBasicInteractionComponent>(UBasicUtils::LineTraceComponent
+	TArray<UActorComponent*> results = UBasicUtils::LineTraceComponents
 				(hit, this, UBasicInteractionComponent::StaticClass(), firstPersonCameraComponent->GetComponentLocation(), firstPersonCameraComponent->GetComponentLocation() + (firstPersonCameraComponent->GetForwardVector() * defaultRaycastDistance),
-				ECollisionChannel::ECC_GameTraceChannel1,true));
+				ECollisionChannel::ECC_GameTraceChannel1,true);
 
-	if (result != nullptr)
+	bool bFound = false;
+
+	for (auto actorComponent : results)
 	{
+		UBasicInteractionComponent* result = Cast<UBasicInteractionComponent>(actorComponent);
 		if (result->IsExecutionEnabled() )
 		{
 			UActorComponent* component = (UActorComponent*)hit.GetComponent();
 			result->Execute(this, component, iType);
-			return true;
+			bFound = true;
 		}
 	}
-	return false;
+
+	return bFound;
 }
 
 bool ABasicCharacter::HighlightInteractableObject()

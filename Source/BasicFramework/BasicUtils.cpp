@@ -62,3 +62,25 @@ UActorComponent * UBasicUtils::LineTraceComponent(FHitResult & outHit, AActor* a
 		return nullptr;
 	}
 }
+
+TArray<UActorComponent*> UBasicUtils::LineTraceComponents(FHitResult& outHit, AActor* actor, UClass* componentClass, const FVector& start, const FVector& end, ECollisionChannel channel, bool worldStaticCollision, bool worldDynamicCollision, bool ignoreActor)
+{
+
+	FCollisionObjectQueryParams objParams;
+	if (worldStaticCollision) objParams.AddObjectTypesToQuery(ECollisionChannel::ECC_WorldStatic);
+	if (worldDynamicCollision) objParams.AddObjectTypesToQuery(ECollisionChannel::ECC_WorldDynamic);
+	objParams.AddObjectTypesToQuery(channel);
+
+	FCollisionQueryParams params;
+	if (ignoreActor) params.AddIgnoredActor(actor);
+
+	bool bHit = actor->GetWorld()->LineTraceSingleByObjectType(outHit, start, end, objParams, params);
+
+	if (bHit)
+	{
+		// Hit.Actor contains a weak pointer to the Actor that the trace hit
+		return outHit.Actor.Get()->GetComponentsByClass(componentClass);	 
+	}
+	
+	return TArray<UActorComponent*>();
+}
