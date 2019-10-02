@@ -25,16 +25,16 @@ public:
 		, blue(0)
 	{}
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UINT8 red;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UINT8 green;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UINT8 blue;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UINT8 alpha;
 
 	FColor ToFColor() { return FColor(red, green, blue, alpha); }
