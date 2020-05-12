@@ -7,6 +7,7 @@ public class GameProjectEditorTarget : TargetRules
 {
 	public GameProjectEditorTarget(TargetInfo Target) : base(Target)
 	{
+		DefaultBuildSettings = BuildSettingsVersion.V2;
 		Type = TargetType.Editor;
         ExtraModuleNames.Add("BasicFramework");
         ExtraModuleNames.Add("GameProject");

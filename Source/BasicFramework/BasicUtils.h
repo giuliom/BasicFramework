@@ -36,9 +36,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Basic Utils")
 	static UActorComponent* LineTraceComponent(FHitResult& outHit, AActor* actor, UClass* componentClass, const FVector& start, const FVector& end, 
-											ECollisionChannel channel = ECollisionChannel::ECC_GameTraceChannel1, bool worldStaticCollision = true, bool worldDynamicCollision = true, bool ignoreActor = true);
+											ECollisionChannel channel, bool worldStaticCollision = true, bool worldDynamicCollision = true, bool ignoreActor = true);
 
 	UFUNCTION(BlueprintCallable, Category = "Basic Utils")
 		static TArray<UActorComponent*> LineTraceComponents(FHitResult& outHit, AActor* actor, UClass* componentClass, const FVector& start, const FVector& end,
-			ECollisionChannel channel = ECollisionChannel::ECC_GameTraceChannel1, bool worldStaticCollision = true, bool worldDynamicCollision = true, bool ignoreActor = true);
+			ECollisionChannel channel, bool worldStaticCollision = true, bool worldDynamicCollision = true, bool ignoreActor = true);
 };

@@ -30,7 +30,7 @@ UObject* UResourcesLoader::LoadAsset(TAssetPtr<UObject> asset)
 {
 	if (asset.IsPending())
 	{
-		const FStringAssetReference& aRef = asset.ToStringReference();
+		const FSoftObjectPath& aRef = asset.ToSoftObjectPath();
 		return UAssetManager::GetStreamableManager().LoadSynchronous(aRef);
 	}
 	return asset.Get();
@@ -39,7 +39,7 @@ UObject* UResourcesLoader::LoadAsset(TAssetPtr<UObject> asset)
 TAssetPtr<UObject> UResourcesLoader::LoadAssetAsync(TAssetPtr<UObject> asset, UObject * worldContextObject, FLatentActionInfo latentInfo)
 {
 	FStreamableDelegate sdelegate = nullptr;
-	if (UWorld* World = GEngine->GetWorldFromContextObject(worldContextObject))
+	if (UWorld* World = GEngine->GetWorldFromContextObjectChecked(worldContextObject))
 	{
 		FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
 		//if (LatentActionManager.FindExistingAction<FAsyncResourceAction>(LatentInfo.CallbackTarget, LatentInfo.UUID) == NULL)
@@ -56,7 +56,7 @@ TAssetPtr<UObject> UResourcesLoader::LoadAssetAsync(TAssetPtr<UObject> asset, FS
 {
 	if (asset.IsPending())
 	{
-		const FStringAssetReference& aRef = asset.ToStringReference();
+		const FSoftObjectPath& aRef = asset.ToSoftObjectPath();
 		UAssetManager::GetStreamableManager().RequestAsyncLoad( aRef, delegateToCall, Priority);
 	}
 	return asset;

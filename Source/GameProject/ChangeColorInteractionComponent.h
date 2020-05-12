@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BasicInteractionComponent.h"
+#include "BasicFramework/BasicInteractionComponent.h"
 #include "Engine/Classes/Engine/DataTable.h"
 #include "ChangeColorInteractionComponent.generated.h"
 
@@ -25,17 +25,17 @@ public:
 		, blue(0)
 	{}
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UINT8 red;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ClampMin = "0", ClampMax = "255"))
+		uint8 red;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UINT8 green;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ClampMin = "0", ClampMax = "255"))
+		uint8 green;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UINT8 blue;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ClampMin = "0", ClampMax = "255"))
+		uint8 blue;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UINT8 alpha;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ClampMin = "0", ClampMax = "255"))
+		uint8 alpha;
 
 	FColor ToFColor() { return FColor(red, green, blue, alpha); }
 };

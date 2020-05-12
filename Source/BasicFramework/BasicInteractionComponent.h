@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "AsyncWork.h"
 #include "BasicInteractionType.h"
 #include "Runtime/GameplayTags/Classes/GameplayTagContainer.h"
 #include "BasicInteractionComponent.generated.h"

@@ -30,28 +30,28 @@ void UTweenComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (time < targetTime)
+	if (m_time < m_targetTime)
 	{
-		time += DeltaTime;
+		m_time += DeltaTime;
 
-		TickTween(time / targetTime);
+		TickTween(m_time / m_targetTime);
 
 	}
 	else
 	{
-		if (loop)
+		if (m_loop)
 		{
-			time = 0;
+			m_time = 0;
 		}
 		else
 		{
 			TickTween(1.0f);
-			isCompleted = true;
+			m_isCompleted = true;
 		}
 	}
 }
 
-
+// TODO refactor
 
 
 /**
@@ -69,46 +69,46 @@ void UTweenComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 
 void UTweenComponent::InitTween(ETweenMode mode, AActor * actor, FVector vOrigin, FVector vTarget, float targetTime, bool worldspace, bool loop, bool teleportPhysics)
 {
-	this->type = ETweenType::POSITION;
+	this->m_type = ETweenType::POSITION;
 	BaseInitTween(mode, actor, targetTime, worldspace, loop, teleportPhysics);
 	
-	this->vOrigin = vOrigin;
-	this->vTarget = vTarget;
+	this->m_vOrigin = vOrigin;
+	this->m_vTarget = vTarget;
 }
 
 void UTweenComponent::InitTween(ETweenMode mode, AActor * actor, FRotator rOrigin, FRotator rTarget, float targetTime, bool worldspace, bool loop, bool teleportPhysics)
 {
-	this->type = ETweenType::ROTATION;
+	this->m_type = ETweenType::ROTATION;
 	BaseInitTween(mode, actor, targetTime, worldspace, loop, teleportPhysics);
 
-	this->rOrigin = rOrigin;
-	this->rTarget = rTarget;
+	this->m_rOrigin = rOrigin;
+	this->m_rTarget = rTarget;
 }
 
 void UTweenComponent::InitTween(ETweenMode mode, AActor * actor, FTransform tOrigin, FTransform tTarget, float targetTime, bool worldspace, bool loop, bool teleportPhysics)
 {
-	this->type = ETweenType::TRANSFORM;
+	this->m_type = ETweenType::TRANSFORM;
 	BaseInitTween(mode, actor, targetTime, worldspace, loop, teleportPhysics);
 
-	this->tOrigin = tOrigin;
-	this->tTarget = tTarget;
+	this->m_tOrigin = tOrigin;
+	this->m_tTarget = tTarget;
 }
 
 
 void UTweenComponent::BaseInitTween(ETweenMode mode, AActor * actor, float targetTime, bool worldspace, bool loop, bool teleportPhysics)
 {
-	this->mode = mode;
-	this->actor = actor;
-	this->targetTime = targetTime;
-	this->loop = loop;
-	this->worldspace = worldspace;
-	this->tType = teleportPhysics ? ETeleportType::TeleportPhysics : ETeleportType::None;
+	this->m_mode = mode;
+	this->m_actor = actor;
+	this->m_targetTime = targetTime;
+	this->m_loop = loop;
+	this->m_worldspace = worldspace;
+	this->m_tType = teleportPhysics ? ETeleportType::TeleportPhysics : ETeleportType::None;
 }
 
 
 void UTweenComponent::TickTween(float alpha)
 {
-	switch (type)
+	switch (m_type)
 	{
 	case ETweenType::POSITION:
 		TickPosition(alpha);
@@ -129,28 +129,28 @@ void UTweenComponent::TickPosition(float alpha)
 {
 	FVector npos = FVector::ZeroVector;
 
-	switch (mode)
+	switch (m_mode)
 	{
 	default:
-		npos = FMath::Lerp<FVector>(vOrigin, vTarget, alpha);
+		npos = FMath::Lerp<FVector>(m_vOrigin, m_vTarget, alpha);
 		break;
 
 	case ETweenMode::QUADRATIC:
-		npos = FMath::InterpExpoIn<FVector>(vOrigin, vTarget, alpha);
+		npos = FMath::InterpExpoIn<FVector>(m_vOrigin, m_vTarget, alpha);
 		break;
 
 	case ETweenMode::EASE_IN:
-		npos = FMath::InterpEaseIn<FVector>(vOrigin, vTarget, alpha, 2);
+		npos = FMath::InterpEaseIn<FVector>(m_vOrigin, m_vTarget, alpha, 2);
 		break;
 
 	case ETweenMode::EASE_OUT:
-		npos = FMath::InterpEaseOut<FVector>(vOrigin, vTarget, alpha, 2);
+		npos = FMath::InterpEaseOut<FVector>(m_vOrigin, m_vTarget, alpha, 2);
 		break;
 	}
 
 
-	if (worldspace) actor->SetActorLocation(npos,false, nullptr, tType);
-	else actor->SetActorRelativeLocation(npos, false, nullptr, tType);
+	if (m_worldspace) m_actor->SetActorLocation(npos,false, nullptr, m_tType);
+	else m_actor->SetActorRelativeLocation(npos, false, nullptr, m_tType);
 }
 
 
@@ -158,26 +158,26 @@ void UTweenComponent::TickRotation(float alpha)
 {
 	FRotator nrot = FRotator::ZeroRotator;
 
-	switch (mode)
+	switch (m_mode)
 	{
 	default:
-		nrot = FMath::Lerp<FRotator>(rOrigin, rTarget, alpha);
+		nrot = FMath::Lerp<FRotator>(m_rOrigin, m_rTarget, alpha);
 		break;
 
 	case ETweenMode::QUADRATIC:
-		nrot = FMath::InterpExpoIn<FRotator>(rOrigin, rTarget, alpha);
+		nrot = FMath::InterpExpoIn<FRotator>(m_rOrigin, m_rTarget, alpha);
 		break;
 
 	case ETweenMode::EASE_IN:
-		nrot = FMath::InterpEaseIn<FRotator>(rOrigin, rTarget, alpha, 2);
+		nrot = FMath::InterpEaseIn<FRotator>(m_rOrigin, m_rTarget, alpha, 2);
 		break;
 
 	case ETweenMode::EASE_OUT:
-		nrot = FMath::InterpEaseOut<FRotator>(rOrigin, rTarget, alpha, 2);
+		nrot = FMath::InterpEaseOut<FRotator>(m_rOrigin, m_rTarget, alpha, 2);
 		break;
 	}
 
-	actor->SetActorRotation(nrot, tType);
+	m_actor->SetActorRotation(nrot, m_tType);
 }
 
 
@@ -186,30 +186,30 @@ void UTweenComponent::TickTransform(float alpha)
 	FVector pos = FVector::ZeroVector;
 	FRotator rot = FRotator::ZeroRotator;
 
-	switch (mode)
+	switch (m_mode)
 	{
 	default:
-		pos = FMath::Lerp<FVector>(vOrigin, vTarget, alpha);
-		rot = FMath::Lerp<FRotator>(rOrigin, rTarget, alpha);
+		pos = FMath::Lerp<FVector>(m_vOrigin, m_vTarget, alpha);
+		rot = FMath::Lerp<FRotator>(m_rOrigin, m_rTarget, alpha);
 		break;
 
 	case ETweenMode::QUADRATIC:
-		pos = FMath::InterpExpoIn<FVector>(vOrigin, vTarget, alpha);
-		rot = FMath::InterpExpoIn<FRotator>(rOrigin, rTarget, alpha);
+		pos = FMath::InterpExpoIn<FVector>(m_vOrigin, m_vTarget, alpha);
+		rot = FMath::InterpExpoIn<FRotator>(m_rOrigin, m_rTarget, alpha);
 		break;
 
 	case ETweenMode::EASE_IN:
-		pos = FMath::InterpEaseIn<FVector>(vOrigin, vTarget, alpha, 2);
-		rot = FMath::InterpEaseIn<FRotator>(rOrigin, rTarget, alpha, 2);
+		pos = FMath::InterpEaseIn<FVector>(m_vOrigin, m_vTarget, alpha, 2);
+		rot = FMath::InterpEaseIn<FRotator>(m_rOrigin, m_rTarget, alpha, 2);
 		break;
 
 	case ETweenMode::EASE_OUT:
-		pos = FMath::InterpEaseOut<FVector>(vOrigin, vTarget, alpha, 2);
-		rot = FMath::InterpEaseOut<FRotator>(rOrigin, rTarget, alpha, 2);
+		pos = FMath::InterpEaseOut<FVector>(m_vOrigin, m_vTarget, alpha, 2);
+		rot = FMath::InterpEaseOut<FRotator>(m_rOrigin, m_rTarget, alpha, 2);
 		break;
 	}
 
-	actor->SetActorTransform(FTransform(rot, pos), false, nullptr, tType);
+	m_actor->SetActorTransform(FTransform(rot, pos), false, nullptr, m_tType);
 }
 
 

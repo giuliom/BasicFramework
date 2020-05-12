@@ -50,40 +50,40 @@ public:
 protected:
 
 	
-	ETweenMode mode = ETweenMode::LINEAR;
-	ETweenType type = ETweenType::POSITION;
+	ETweenMode m_mode = ETweenMode::LINEAR;
+	ETweenType m_type = ETweenType::POSITION;
 
 	// The target actor
-	AActor* actor = nullptr;
+	AActor* m_actor = nullptr;
 
 	// FVectors to be interpolated
-	FVector vOrigin = FVector::ZeroVector;
-	FVector vTarget = FVector::OneVector;
+	FVector m_vOrigin = FVector::ZeroVector;
+	FVector m_vTarget = FVector::OneVector;
 
 	// FRotators to be interpolated
-	FRotator rOrigin;
-	FRotator rTarget;
+	FRotator m_rOrigin;
+	FRotator m_rTarget;
 
 	// Ftransforms to be interpolated
-	FTransform tOrigin;
-	FTransform tTarget;
+	FTransform m_tOrigin;
+	FTransform m_tTarget;
 
 	// Time counter in seconds. Updated with deltime
-	float time = 0.0f;
+	float m_time = 0.0f;
 
 	// The lenght of the animation in seconds
-	float targetTime = 1.0f;
+	float m_targetTime = 1.0f;
 
 	// Should the animation be looping
-	bool loop = false;
+	bool m_loop = false;
 
 	// If the the animations works in world or localspace
-	bool worldspace = true;
+	bool m_worldspace = true;
 
 	// The ETeleportType used when setting a location
-	ETeleportType tType = ETeleportType::None;
+	ETeleportType m_tType = ETeleportType::None;
 
-	bool isCompleted = false; 
+	bool m_isCompleted = false;
 
 public:	
 	// Called every frame
@@ -95,7 +95,7 @@ public:
 
 	void InitTween(ETweenMode mode, AActor* actor, FTransform tOrigin, FTransform tTarget, float targetTime = 1.0f, bool worldspace = true, bool loop = false, bool teleportPhysics = false);
 
-	bool IsTweenCompleted() { return isCompleted; }
+	bool IsTweenCompleted() { return m_isCompleted; }
 
 
 protected:

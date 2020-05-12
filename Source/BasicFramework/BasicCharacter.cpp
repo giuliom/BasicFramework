@@ -31,8 +31,8 @@ void ABasicCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	firstPersonCameraComponent->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, cameraSocket);
-	firstPersonCameraComponent->RelativeLocation = FVector(0.0f, 20.0f, 00.0f); // Position the camera
-	firstPersonCameraComponent->RelativeRotation = FRotator(0.0f, 90.0f, 0.0f);
+	firstPersonCameraComponent->SetRelativeLocation(FVector(0.0f, 20.0f, 00.0f)); // Position the camera
+	firstPersonCameraComponent->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));
 
 	maxSpeedCached = movementComponent->MaxWalkSpeed;
 }

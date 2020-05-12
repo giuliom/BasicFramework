@@ -38,7 +38,7 @@ UTweenComponent * UTweenFunctionLibrary::CreateTween(AActor * actor)
 
 bool UTweenFunctionLibrary::CreateLatentAction(UTweenComponent * tween, UObject * worldContextObject, FLatentActionInfo latentInfo)
 {
-	if (UWorld* World = GEngine->GetWorldFromContextObject(worldContextObject))
+	if (UWorld* World = GEngine->GetWorldFromContextObjectChecked(worldContextObject))
 	{
 		FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
 		LatentActionManager.AddNewAction(latentInfo.CallbackTarget, latentInfo.UUID, new FTweenLatentAction(tween, latentInfo));
