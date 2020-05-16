@@ -9,16 +9,21 @@
  * Creates a UTweenComponent and attach it to an Actor
  * @param actor
  */
-
-UTweenComponent * UTweenFunctionLibrary::CreateTween(AActor * actor)
+inline UTweenComponent* UTweenFunctionLibrary::CreateTweenComponent(AActor* actor, TweenContainer* container, UObject* worldContextObject, FLatentActionInfo latentInfo)
 {
-	UTweenComponent* tween = NewObject<UTweenComponent>(actor, UTweenComponent::StaticClass());
+	UTweenComponent* component = NewObject<UTweenComponent>(actor, UTweenComponent::StaticClass());
+	component->InitContainer(container);
 
-	//	actor->AddInstanceComponent(tween);
-	actor->AddOwnedComponent(tween);
-	tween->RegisterComponent();
+	actor->AddOwnedComponent(component);
+	component->RegisterComponent();
 
-	return tween;
+	if (!CreateLatentAction(component, worldContextObject, latentInfo))
+	{
+		component->DestroyComponent();
+		component = nullptr;
+	}
+
+	return component;
 }
 
 /**
@@ -53,47 +58,29 @@ bool UTweenFunctionLibrary::CreateLatentAction(UTweenComponent * tween, UObject 
 UTweenComponent * UTweenFunctionLibrary::TweenLocation(AActor * actor, FVector vOrigin, FVector vTarget, UObject * worldContextObject, FLatentActionInfo latentInfo, ETweenMode tweenMode, float targetTime, bool worldspace, bool loop, bool teleportPhysics)
 {
 	if (actor == nullptr) return nullptr;
-	UTweenComponent* tween = CreateTween(actor);
-	tween->InitTween(tweenMode, actor, vOrigin, vTarget, targetTime, worldspace, loop, teleportPhysics);
 
-	if (!CreateLatentAction(tween, worldContextObject, latentInfo))
-	{
-		tween->DestroyComponent();
-		tween = nullptr;
-	}
-
-	return tween;
+	TweenTemplate<FVector> tween(tweenMode, actor, vOrigin, vTarget, targetTime, worldspace, loop, teleportPhysics);
+	TweenLocationContainer* container = new TweenLocationContainer(tween);
+	return CreateTweenComponent(actor, container, worldContextObject, latentInfo);
 }
 
 
-UTweenComponent * UTweenFunctionLibrary::TweenRotation(AActor * actor, FRotator rOrigin, FRotator rTarget, UObject * worldContextObject, FLatentActionInfo latentInfo, ETweenMode tweenMode, float targetTime, bool loop, bool teleportPhysics)
+UTweenComponent * UTweenFunctionLibrary::TweenRotation(AActor * actor, FRotator rOrigin, FRotator rTarget, UObject * worldContextObject, FLatentActionInfo latentInfo, ETweenMode tweenMode, float targetTime, bool worldspace, bool loop, bool teleportPhysics)
 {
 	if (actor == nullptr) return nullptr;
-	UTweenComponent* tween = CreateTween(actor);
-	tween->InitTween(tweenMode, actor, rOrigin, rTarget, targetTime, loop, teleportPhysics);
 
-	if (!CreateLatentAction(tween, worldContextObject, latentInfo))
-	{
-		tween->DestroyComponent();
-		tween = nullptr;
-	}
-
-	return tween;
+	TweenTemplate<FRotator> tween(tweenMode, actor, rOrigin, rTarget, targetTime, worldspace, loop, teleportPhysics);
+	TweenRotationContainer* container = new TweenRotationContainer(tween);
+	return CreateTweenComponent(actor, container, worldContextObject, latentInfo);
 }
 
 
-UTweenComponent * UTweenFunctionLibrary::TweenTransform(AActor * actor, FTransform tOrigin, FTransform tTarget, UObject * worldContextObject, FLatentActionInfo latentInfo, ETweenMode tweenMode, float targetTime, bool loop, bool teleportPhysics)
+UTweenComponent * UTweenFunctionLibrary::TweenTransform(AActor * actor, FTransform tOrigin, FTransform tTarget, UObject * worldContextObject, FLatentActionInfo latentInfo, ETweenMode tweenMode, float targetTime, bool worldspace, bool loop, bool teleportPhysics)
 {
 	if (actor == nullptr) return nullptr;
-	UTweenComponent* tween = CreateTween(actor);
-	tween->InitTween(tweenMode, actor, tOrigin, tTarget, targetTime, loop, teleportPhysics);
 
-	if (!CreateLatentAction(tween, worldContextObject, latentInfo))
-	{
-		tween->DestroyComponent();
-		tween = nullptr;
-	}
-
-	return tween;
+	TweenTemplate<FTransform> tween(tweenMode, actor, tOrigin, tTarget, targetTime, worldspace, loop, teleportPhysics);
+	TweenTransformContainer* container = new TweenTransformContainer(tween);
+	return CreateTweenComponent(actor, container, worldContextObject, latentInfo);
 }
 

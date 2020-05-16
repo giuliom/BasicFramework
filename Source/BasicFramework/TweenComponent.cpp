@@ -15,12 +15,17 @@ UTweenComponent::UTweenComponent()
 	// ...
 }
 
-void UTweenComponent::BeginPlay()
+void UTweenComponent::BeginDestroy()
 {
-	// Call the base class  
-	Super::BeginPlay();
+	Super::BeginDestroy();
+
+	delete m_tween;
 }
 
+void UTweenComponent::InitContainer(TweenContainer* tween)
+{
+	m_tween =tween;
+}
 
 /**
 * Updates the animation in the main game loop.
@@ -30,11 +35,17 @@ void UTweenComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	m_tween->TickTween(DeltaTime);
+}
+
+template<class T>
+void TweenTemplate<T>::TickTween(float DeltaTime)
+{
 	if (m_time < m_targetTime)
 	{
 		m_time += DeltaTime;
 
-		TickTween(m_time / m_targetTime);
+		Apply(m_time / m_targetTime);
 
 	}
 	else
@@ -45,171 +56,117 @@ void UTweenComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 		}
 		else
 		{
-			TickTween(1.0f);
+			Apply(1.0f);
 			m_isCompleted = true;
 		}
 	}
 }
 
-// TODO refactor
 
-
-/**
-* Initializes the tween parameters. Every UTweenComponent must be initialized calling an InitTween function
-* 
-* @param mode sets the mode of the tween therefore which tweening should execute
-* @param actor the actor that is getting tweened
-* @param vOrigin the initial vector, in this case representing a location
-* @param vTarget the target vector
-* @param targetTime the duration of the tween in seconds
-* @param worldspace if the tween vectors are in worldspace or local.
-* @param loop if the tween must be looping
-* @param teleportPhysics if we must use teleportPhysics when updating the location
-*/
-
-void UTweenComponent::InitTween(ETweenMode mode, AActor * actor, FVector vOrigin, FVector vTarget, float targetTime, bool worldspace, bool loop, bool teleportPhysics)
-{
-	this->m_type = ETweenType::POSITION;
-	BaseInitTween(mode, actor, targetTime, worldspace, loop, teleportPhysics);
-	
-	this->m_vOrigin = vOrigin;
-	this->m_vTarget = vTarget;
-}
-
-void UTweenComponent::InitTween(ETweenMode mode, AActor * actor, FRotator rOrigin, FRotator rTarget, float targetTime, bool worldspace, bool loop, bool teleportPhysics)
-{
-	this->m_type = ETweenType::ROTATION;
-	BaseInitTween(mode, actor, targetTime, worldspace, loop, teleportPhysics);
-
-	this->m_rOrigin = rOrigin;
-	this->m_rTarget = rTarget;
-}
-
-void UTweenComponent::InitTween(ETweenMode mode, AActor * actor, FTransform tOrigin, FTransform tTarget, float targetTime, bool worldspace, bool loop, bool teleportPhysics)
-{
-	this->m_type = ETweenType::TRANSFORM;
-	BaseInitTween(mode, actor, targetTime, worldspace, loop, teleportPhysics);
-
-	this->m_tOrigin = tOrigin;
-	this->m_tTarget = tTarget;
-}
-
-
-void UTweenComponent::BaseInitTween(ETweenMode mode, AActor * actor, float targetTime, bool worldspace, bool loop, bool teleportPhysics)
-{
-	this->m_mode = mode;
-	this->m_actor = actor;
-	this->m_targetTime = targetTime;
-	this->m_loop = loop;
-	this->m_worldspace = worldspace;
-	this->m_tType = teleportPhysics ? ETeleportType::TeleportPhysics : ETeleportType::None;
-}
-
-
-void UTweenComponent::TickTween(float alpha)
-{
-	switch (m_type)
-	{
-	case ETweenType::POSITION:
-		TickPosition(alpha);
-		break;
-
-	case ETweenType::ROTATION:
-		TickRotation(alpha);
-		break;
-
-	case ETweenType::TRANSFORM:
-		TickTransform(alpha);
-		break;
-	}
-}
-
-
-void UTweenComponent::TickPosition(float alpha)
+template<>
+void TweenTemplate<FVector>::Apply(float alpha)
 {
 	FVector npos = FVector::ZeroVector;
-
+	TArray<int> array;
 	switch (m_mode)
 	{
 	default:
-		npos = FMath::Lerp<FVector>(m_vOrigin, m_vTarget, alpha);
+		npos = FMath::Lerp<FVector>(m_tOrigin, m_tTarget, alpha);
 		break;
 
 	case ETweenMode::QUADRATIC:
-		npos = FMath::InterpExpoIn<FVector>(m_vOrigin, m_vTarget, alpha);
+		npos = FMath::InterpExpoIn<FVector>(m_tOrigin, m_tTarget, alpha);
 		break;
 
 	case ETweenMode::EASE_IN:
-		npos = FMath::InterpEaseIn<FVector>(m_vOrigin, m_vTarget, alpha, 2);
+		npos = FMath::InterpEaseIn<FVector>(m_tOrigin, m_tTarget, alpha, 2);
 		break;
 
 	case ETweenMode::EASE_OUT:
-		npos = FMath::InterpEaseOut<FVector>(m_vOrigin, m_vTarget, alpha, 2);
+		npos = FMath::InterpEaseOut<FVector>(m_tOrigin, m_tTarget, alpha, 2);
 		break;
 	}
 
 
-	if (m_worldspace) m_actor->SetActorLocation(npos,false, nullptr, m_tType);
+	if (m_worldspace) m_actor->SetActorLocation(npos, false, nullptr, m_tType);
 	else m_actor->SetActorRelativeLocation(npos, false, nullptr, m_tType);
 }
 
-
-void UTweenComponent::TickRotation(float alpha)
+template<>
+void TweenTemplate<FRotator>::Apply(float alpha)
 {
 	FRotator nrot = FRotator::ZeroRotator;
 
 	switch (m_mode)
 	{
 	default:
-		nrot = FMath::Lerp<FRotator>(m_rOrigin, m_rTarget, alpha);
+		nrot = FMath::Lerp<FRotator>(m_tOrigin, m_tTarget, alpha);
 		break;
 
 	case ETweenMode::QUADRATIC:
-		nrot = FMath::InterpExpoIn<FRotator>(m_rOrigin, m_rTarget, alpha);
+		nrot = FMath::InterpExpoIn<FRotator>(m_tOrigin, m_tTarget, alpha);
 		break;
 
 	case ETweenMode::EASE_IN:
-		nrot = FMath::InterpEaseIn<FRotator>(m_rOrigin, m_rTarget, alpha, 2);
+		nrot = FMath::InterpEaseIn<FRotator>(m_tOrigin, m_tTarget, alpha, 2);
 		break;
 
 	case ETweenMode::EASE_OUT:
-		nrot = FMath::InterpEaseOut<FRotator>(m_rOrigin, m_rTarget, alpha, 2);
+		nrot = FMath::InterpEaseOut<FRotator>(m_tOrigin, m_tTarget, alpha, 2);
 		break;
 	}
 
-	m_actor->SetActorRotation(nrot, m_tType);
+	if (m_worldspace) m_actor->SetActorRotation(nrot, m_tType);
+	else m_actor->SetActorRelativeRotation(nrot, false, nullptr, m_tType);
 }
 
-
-void UTweenComponent::TickTransform(float alpha)
+template<>
+void TweenTemplate<FTransform>::Apply(float alpha)
 {
 	FVector pos = FVector::ZeroVector;
+	FVector scale = FVector::OneVector;
 	FRotator rot = FRotator::ZeroRotator;
+
+	const FVector vOrigin = m_tOrigin.GetLocation();
+	const FVector vTarget = m_tTarget.GetLocation();
+
+	const FVector sOrigin = m_tOrigin.GetScale3D();
+	const FVector sTarget = m_tOrigin.GetScale3D();
+
+	const FRotator rOrigin = m_tOrigin.GetRotation().Rotator();
+	const FRotator rTarget = m_tTarget.GetRotation().Rotator();
 
 	switch (m_mode)
 	{
 	default:
-		pos = FMath::Lerp<FVector>(m_vOrigin, m_vTarget, alpha);
-		rot = FMath::Lerp<FRotator>(m_rOrigin, m_rTarget, alpha);
+		pos		= FMath::Lerp<FVector>(vOrigin, vTarget, alpha);
+		scale	= FMath::Lerp<FVector>(sOrigin, sTarget, alpha);
+		rot		= FMath::Lerp<FRotator>(rOrigin, rTarget, alpha);
 		break;
 
 	case ETweenMode::QUADRATIC:
-		pos = FMath::InterpExpoIn<FVector>(m_vOrigin, m_vTarget, alpha);
-		rot = FMath::InterpExpoIn<FRotator>(m_rOrigin, m_rTarget, alpha);
+		pos		= FMath::InterpExpoIn<FVector>(vOrigin, vTarget, alpha);
+		scale	= FMath::InterpExpoIn<FVector>(sOrigin, sTarget, alpha);
+		rot		= FMath::InterpExpoIn<FRotator>(rOrigin, rTarget, alpha);
 		break;
 
 	case ETweenMode::EASE_IN:
-		pos = FMath::InterpEaseIn<FVector>(m_vOrigin, m_vTarget, alpha, 2);
-		rot = FMath::InterpEaseIn<FRotator>(m_rOrigin, m_rTarget, alpha, 2);
+		pos		= FMath::InterpEaseIn<FVector>(vOrigin, vTarget, alpha, 2);
+		scale	= FMath::InterpEaseIn<FVector>(sOrigin, sTarget, alpha, 2);
+		rot		= FMath::InterpEaseIn<FRotator>(rOrigin, rTarget, alpha, 2);
 		break;
 
 	case ETweenMode::EASE_OUT:
-		pos = FMath::InterpEaseOut<FVector>(m_vOrigin, m_vTarget, alpha, 2);
-		rot = FMath::InterpEaseOut<FRotator>(m_rOrigin, m_rTarget, alpha, 2);
+		pos		= FMath::InterpEaseOut<FVector>(vOrigin, vTarget, alpha, 2);
+		scale	= FMath::InterpEaseOut<FVector>(sOrigin, sTarget, alpha, 2);
+		rot		= FMath::InterpEaseOut<FRotator>(rOrigin, rTarget, alpha, 2);
 		break;
 	}
 
-	m_actor->SetActorTransform(FTransform(rot, pos), false, nullptr, m_tType);
+	FTransform t(rot, pos, scale);
+
+	if (m_worldspace) m_actor->SetActorTransform(t, false, nullptr, m_tType);
+	else m_actor->SetActorRelativeTransform(t, false, nullptr, m_tType);
 }
 
 

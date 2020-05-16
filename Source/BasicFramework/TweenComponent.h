@@ -26,50 +26,57 @@ enum class ETweenMode : uint8
 	EASE_OUT	UMETA(DisplayName = "EaseOut"),
 };
 
-UENUM(BlueprintType)		//"BlueprintType" is essential to include
-enum class ETweenType : uint8
-{
-	POSITION 	UMETA(DisplayName = "Position"),
-	ROTATION	UMETA(DisplayName = "Rotation"),
-	TRANSFORM	UMETA(DisplayName = "Transform")
-};
-
-
 DECLARE_DYNAMIC_DELEGATE(FTweenDynamicDelegate);
 
-//TODO check if a template component is possible
-UCLASS(BlueprintType, Blueprintable, ClassGroup=(Gameplay), meta=(BlueprintSpawnableComponent) )
+/**
+* TweenContainer Class
+*/
+class TweenContainer
+{
+protected:
+	TweenContainer() {}
+
+public:
+
+	virtual void TickTween(float DeltaTime) {}
+	virtual bool isCompleted() const { return true; }
+};
+
+/**
+* UTweenComponenent Class 
+*/
+UCLASS(BlueprintType, Blueprintable, ClassGroup = (Gameplay), meta = (BlueprintSpawnableComponent))
 class BASICFRAMEWORK_API UTweenComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+	TweenContainer* m_tween;
+
+public:
+
 	// Sets default values for this component's properties
 	UTweenComponent();
 
+	virtual void BeginDestroy() override;
+
+	void InitContainer(TweenContainer* tween);
+
+	// Called every frame
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	bool IsTweenCompleted() const { return m_tween->isCompleted(); }
+};
+
+
+/**
+* TweenTemplate Class
+*/
+template<class T>
+class BASICFRAMEWORK_API TweenTemplate
+{
 protected:
 
-	
 	ETweenMode m_mode = ETweenMode::LINEAR;
-	ETweenType m_type = ETweenType::POSITION;
-
-	// The target actor
-	AActor* m_actor = nullptr;
-
-	// FVectors to be interpolated
-	FVector m_vOrigin = FVector::ZeroVector;
-	FVector m_vTarget = FVector::OneVector;
-
-	// FRotators to be interpolated
-	FRotator m_rOrigin;
-	FRotator m_rTarget;
-
-	// Ftransforms to be interpolated
-	FTransform m_tOrigin;
-	FTransform m_tTarget;
-
-	// Time counter in seconds. Updated with deltime
-	float m_time = 0.0f;
 
 	// The lenght of the animation in seconds
 	float m_targetTime = 1.0f;
@@ -83,33 +90,87 @@ protected:
 	// The ETeleportType used when setting a location
 	ETeleportType m_tType = ETeleportType::None;
 
+	// The target actor
+	AActor* m_actor = nullptr;
+
 	bool m_isCompleted = false;
 
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	// FVectors to be interpolated
+	T m_tOrigin;
+	T m_tTarget;
 
-	void InitTween(ETweenMode mode, AActor* actor, FVector vOrigin, FVector vTarget, float targetTime = 1.0f, bool worldspace = true, bool loop = false, bool teleportPhysics = false);
+	// Time counter in seconds. Updated with deltime
+	float m_time = 0.0f;
 
-	void InitTween(ETweenMode mode, AActor* actor, FRotator rOrigin, FRotator rTarget, float targetTime = 1.0f, bool worldspace = true, bool loop = false, bool teleportPhysics = false);
+public:
 
-	void InitTween(ETweenMode mode, AActor* actor, FTransform tOrigin, FTransform tTarget, float targetTime = 1.0f, bool worldspace = true, bool loop = false, bool teleportPhysics = false);
+	/**
+	* Initializes the tween parameters. Every UTweenComponent must be initialized calling an InitTween function
+	*
+	* @param mode sets the mode of the tween therefore which tweening should execute
+	* @param actor the actor that is getting tweened
+	* @param vOrigin the initial vector, in this case representing a location
+	* @param vTarget the target vector
+	* @param targetTime the duration of the tween in seconds
+	* @param worldspace if the tween vectors are in worldspace or local.
+	* @param loop if the tween must be looping
+	* @param teleportPhysics if we must use teleportPhysics when updating the location
+*/
+	TweenTemplate(ETweenMode mode, AActor* actor, const T& vOrigin, const T& vTarget, float targetTime = 1.0f, bool worldspace = true, bool loop = false, bool teleportPhysics = false)
+		: m_mode(mode)
+		, m_targetTime(targetTime)
+		, m_loop(loop)
+		, m_worldspace(worldspace)
+		, m_tType(teleportPhysics ? ETeleportType::TeleportPhysics : ETeleportType::None)
+		, m_actor(actor)
+		, m_isCompleted(false)
+		, m_tOrigin(vOrigin)
+		, m_tTarget(vTarget)
+	{
+	}
 
-	bool IsTweenCompleted() { return m_isCompleted; }
+	void TickTween(float DeltaTime);
+	void Apply(float alpha);
+
+	bool isCompleted() const { return m_isCompleted; }
+};
 
 
-protected:
+/**
+* TweenContainer child classes implementing for all the types supported
+*/
+class TweenLocationContainer : public TweenContainer
+{
+	TweenTemplate<FVector> m_tween;
 
-	void BaseInitTween(ETweenMode mode, AActor* actor, float targetTime, bool worldspace = true, bool loop = false, bool teleportPhysics = false);
+public:
+	TweenLocationContainer(const TweenTemplate<FVector>& tween) : m_tween(tween)
+	{}
 
-	virtual void BeginPlay() override;
+	void TickTween(float DeltaTime) override { m_tween.TickTween(DeltaTime); }
+	virtual bool isCompleted() const override { return m_tween.isCompleted(); }
+};
 
-	void TickTween(float alpha);
+class TweenRotationContainer : public TweenContainer
+{
+	TweenTemplate<FRotator> m_tween;
 
-	void TickPosition(float alpha);
+public:
+	TweenRotationContainer(const TweenTemplate<FRotator>& tween) : m_tween(tween)
+	{}
 
-	void TickRotation(float alpha);
+	void TickTween(float DeltaTime) override { m_tween.TickTween(DeltaTime); }
+	virtual bool isCompleted() const override { return m_tween.isCompleted(); }
+};
 
-	void TickTransform(float alpha);
+class TweenTransformContainer : public TweenContainer
+{
+	TweenTemplate<FTransform> m_tween;
 
+public:
+	TweenTransformContainer(const TweenTemplate<FTransform>& tween) : m_tween(tween)
+	{}
+
+	void TickTween(float DeltaTime) override { m_tween.TickTween(DeltaTime); }
+	virtual bool isCompleted() const override { return m_tween.isCompleted(); }
 };

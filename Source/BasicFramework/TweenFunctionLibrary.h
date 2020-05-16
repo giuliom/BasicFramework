@@ -46,7 +46,8 @@ class BASICFRAMEWORK_API UTweenFunctionLibrary : public UBlueprintFunctionLibrar
 	GENERATED_BODY()
 
 protected:
-		static UTweenComponent* CreateTween(AActor* actor);
+
+		static UTweenComponent* CreateTweenComponent(AActor* actor, TweenContainer* container, UObject* worldContextObject, FLatentActionInfo latentInfo);
 
 		static bool CreateLatentAction(UTweenComponent* tween, UObject * worldContextObject, FLatentActionInfo latentInfo);
 	
@@ -56,11 +57,8 @@ public:
 		static UTweenComponent* TweenLocation(AActor* actor, FVector vOrigin, FVector vTarget, UObject * worldContextObject, FLatentActionInfo latentInfo, ETweenMode tweenMode = ETweenMode::LINEAR, float targetTime = 1.0f, bool worldspace = true, bool loop = false, bool teleportPhysics = false);
 		
 		UFUNCTION(BlueprintCallable, Category = "Tween", meta = (Latent, LatentInfo = "LatentInfo", HidePin = "worldContextObject", DefaultToSelf = "worldContextObject"))
-		static UTweenComponent* TweenRotation(AActor* actor, FRotator rOrigin, FRotator rTarget, UObject * worldContextObject, FLatentActionInfo latentInfo, ETweenMode tweenMode = ETweenMode::LINEAR, float targetTime = 1.0f, bool loop = false, bool teleportPhysics = false);
+		static UTweenComponent* TweenRotation(AActor* actor, FRotator rOrigin, FRotator rTarget, UObject * worldContextObject, FLatentActionInfo latentInfo, ETweenMode tweenMode = ETweenMode::LINEAR, float targetTime = 1.0f, bool worldspace = true, bool loop = false, bool teleportPhysics = false);
 
 		UFUNCTION(BlueprintCallable, Category = "Tween", meta = (Latent, LatentInfo = "LatentInfo", HidePin = "worldContextObject", DefaultToSelf = "worldContextObject"))
-		static UTweenComponent* TweenTransform(AActor* actor, FTransform tOrigin, FTransform tTarget, UObject * worldContextObject, FLatentActionInfo latentInfo, ETweenMode tweenMode = ETweenMode::LINEAR, float targetTime = 1.0f, bool loop = false, bool teleportPhysics = false);
-
+		static UTweenComponent* TweenTransform(AActor* actor, FTransform tOrigin, FTransform tTarget, UObject * worldContextObject, FLatentActionInfo latentInfo, ETweenMode tweenMode = ETweenMode::LINEAR, float targetTime = 1.0f, bool worldspace = true, bool loop = false, bool teleportPhysics = false);
 };
-
-
