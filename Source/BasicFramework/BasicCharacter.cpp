@@ -145,7 +145,7 @@ bool ABasicCharacter::HighlightInteractableObject()
 
 	if (result != nullptr)
 	{
-		primitive = Cast<UPrimitiveComponent> (hit.Actor->GetComponentByClass(UPrimitiveComponent::StaticClass()));
+		primitive = hit.GetComponent();
 		
 		if (result->IsExecutionEnabled() && primitive != nullptr)
 		{
