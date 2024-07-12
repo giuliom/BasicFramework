@@ -79,7 +79,9 @@ TArray<UActorComponent*> UBasicUtils::LineTraceComponents(FHitResult& outHit, AA
 	if (bHit)
 	{
 		// Hit.Actor contains a weak pointer to the Actor that the trace hit
-		return outHit.GetActor()->GetComponentsByClass(componentClass);
+		TArray<UActorComponent*> results;
+		outHit.GetActor()->GetComponents(componentClass, results);
+		return results;
 	}
 	
 	return TArray<UActorComponent*>();
